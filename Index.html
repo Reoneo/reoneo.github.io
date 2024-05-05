@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTML Editor</title>
+    <style>
+        /* Reset default margins and paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Ensure consistent box sizing */
+        }
+
+        body {
+            text-align: center; /* Center align all content */
+            background-color: white; /* White background */
+        }
+
+        .logo {
+            padding: 0; /* No padding */
+            margin: 0; /* No margin */
+        }
+
+        .sample {
+            padding: 0; /* No padding */
+            margin: 0; /* No margin */
+        }
+
+        .contact {
+            margin-top: 10px; /* Margin above contact info */
+            display: inline-flex; /* Align icons inline */
+            gap: 10px; /* Space between icons */
+        }
+
+        img {
+            display: block; /* Ensure there's no extra space */
+            margin: 0 auto; /* Center images horizontally */
+            max-width: 100%; /* Ensure no overflow */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo section at the top -->
+    <div class="logo">
+        <img src="https://i.imgur.com/5mlrzVj.jpeg" alt="Logo" style="max-width: 100%; height: auto;">
+    </div>
+
+    <!-- Second image, replacing the old one -->
+    <div class="sample">
+        <img src="https://i.imgur.com/NiAJGJ2.jpeg" alt="New Sample Image" style="max-width: 100%; height: auto;">
+    </div>
+
+    <!-- Contact information -->
+    <div class="contact">
+        <!-- Phone icon with a link to call -->
+        <a href="tel:+447783485026">
+            <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone Icon" width="30" height="30">
+        </a>
+
+        <!-- Email icon with a link to email -->
+        <a href="mailto:Info@vape.box">
+            <img src="https://cdn-icons-png.flaticon.com/512/455/455712.png" alt="Email Icon" width="30" height="30">
+        </a>
+    </div>
+</body>
+</html>
