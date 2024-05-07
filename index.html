@@ -3,93 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vape.Box</title>
-
-    <!-- Open Graph tags for social media previews -->
-    <meta property="og:title" content="Vape.Box">
-    <meta property="og:description" content="Over 18s ONLY">
-    <meta property="og:url" content="https://vape.box">
+    <title>Vape.Box - Premium Vaping Products</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Open Graph and Twitter Card tags for improved social media sharing -->
+    <meta property="og:title" content="Vape.Box - Premium Vaping Products">
+    <meta property="og:description" content="Explore top-quality vaping gear designed for enthusiasts. Age 18+ only.">
     <meta property="og:image" content="https://i.imgur.com/ghmaU1x.jpeg">
+    <meta property="og:url" content="https://vape.box">
     <meta property="og:type" content="website">
-
-    <!-- Twitter Card tags for Twitter previews -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vape.Box">
-    <meta name="twitter:description" content="Over 18s ONLY">
+    <meta name="twitter:title" content="Vape.Box - Premium Vaping Products">
+    <meta name="twitter:description" content="Explore top-quality vaping gear designed for enthusiasts. Age 18+ only.">
     <meta name="twitter:image" content="https://i.imgur.com/ghmaU1x.jpeg">
-
-    <style>
-        /* Prevent horizontal scrolling */
-        html, body {
-            overflow-x: hidden;
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            text-align: center;
-            background-color: white;
-        }
-        .logo, .sample {
-            padding: 0;
-            margin: 0;
-        }
-        .contact {
-            margin-top: 10px;
-            display: inline-flex;
-            gap: 10px;
-        }
-        img {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            height: auto;
-        }
-        /* Section for spacing */
-        .gap {
-            height: 20px; /* Adjust the height of the gap as needed */
-        }
-    </style>
 </head>
 <body>
-    <!-- Logo section -->
-    <div class="logo">
-        <img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Logo" style="max-width: 100%; height: auto;">
-    </div>
+    <header>
+        <img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Vape.Box Logo" class="logo">
+        <nav>
+            <ul>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <!-- Second image section -->
-    <div class="sample">
-        <img src="https://i.imgur.com/kWJUL9C.png" alt="Sample Image" style="max-width: 100%; height: auto;">
-    </div>
+    <main>
+        <section id="hero">
+            <h1>Welcome to Vape.Box</h1>
+            <p>Your destination for premium vaping products.</p>
+            <a href="#shop" class="btn-primary">Shop Now</a>
+        </section>
 
-    <!-- Contact information with shopping bag, LinkedIn, and Facebook icons -->
-    <div class="contact">
-        <a href="tel:+447783485026">
-            <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone Icon" width="30" height="30">
-        </a>
-        <a href="mailto:reon@vape.box">
-            <img src="https://cdn-icons-png.flaticon.com/512/455/455712.png" alt="Email Icon" width="30" height="30">
-        </a>
-        <a href="https://opensea.io/vape.box">
-            <img src="https://cdn-icons-png.flaticon.com/512/102/102665.png" alt="Shopping Bag Icon" width="30" height="30">
-        </a>
-        <a href="https://www.linkedin.com/in/reon-franklyn-7a5733133">
-            <img src="https://cdn-icons-png.flaticon.com/512/3536/3536569.png" alt="LinkedIn Icon" width="30" height="30">
-        </a>
-        <!-- Facebook icon with hyperlink -->
-        <a href="https://www.facebook.com/groups/the.xrp.army/?ref=share">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384005.png" alt="Facebook Icon" width="30" height="30">
-        </a>
-    </div>
+        <section id="products">
+            <h2>Featured Products</h2>
+            <div class="product-grid">
+                <!-- Product items will be inserted here -->
+            </div>
+        </section>
 
-    <!-- Gap section for spacing -->
-    <div class="gap"></div>
+        <section id="about">
+            <h2>About Us</h2>
+            <p>Learn more about our commitment to quality and customer satisfaction.</p>
+        </section>
 
-    <!-- New image section -->
-    <div class="new-image">
-        <img src="https://i.imgur.com/f4swShQ.jpeg" alt="New Image" style="max-width: 100%; height: auto;">
-    </div>
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Questions? Reach out through our social media or contact form.</p>
+            <div class="contact-links">
+                <!-- Links to social media and contact form -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Vape.Box - All rights reserved.</p>
+    </footer>
 </body>
 </html>
