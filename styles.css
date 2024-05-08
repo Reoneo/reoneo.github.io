@@ -1,49 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Page</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#" onclick="document.getElementById('login-modal').style.display='block'">Login</a></li>
-            </ul>
-        </nav>
-    </header>
+body {
+    font-family: Arial, sans-serif;
+}
 
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <span onclick="document.getElementById('login-modal').style.display='none'" class="close">&times;</span>
-            <form action="/submit-your-login-form" method="post">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username"><br>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password"><br>
-                <button type="submit">Login</button>
-            </form>
-        </div>
-    </div>
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
 
-    <main>
-        <h1>Featured Products</h1>
-        <div class="product">
-            <img src="product1.jpg" alt="Product 1">
-            <h2>Product 1</h2>
-            <p>$19.99</p>
-        </div>
-        <!-- Repeat for more products -->
-    </main>
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
 
-    <footer>
-        <p>Copyright © 2024</p>
-    </footer>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.product {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+}
