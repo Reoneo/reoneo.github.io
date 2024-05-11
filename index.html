@@ -4,95 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vape.Box</title>
-
-    <!-- Open Graph tags for social media previews -->
-    <meta property="og:title" content="Vape.Box">
-    <meta property="og:description" content="Over 18s ONLY">
-    <meta property="og:url" content="https://vape.box">
-    <meta property="og:image" content="https://i.imgur.com/ghmaU1x.jpeg">
-    <meta property="og:type" content="website">
-
-    <!-- Twitter Card tags for Twitter previews -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vape.Box">
-    <meta name="twitter:description" content="Over 18s ONLY">
-    <meta name="twitter:image" content="https://i.imgur.com/ghmaU1x.jpeg">
-
-    <style>
-        /* Prevent horizontal scrolling */
-        html, body {
-            overflow-x: hidden;
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            text-align: center;
-            background-color: white;
-        }
-        .logo, .sample {
-            padding: 0;
-            margin: 0;
-        }
-        .contact {
-            margin-top: 10px;
-            display: inline-flex;
-            gap: 10px;
-        }
-        img {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            height: auto;
-        }
-        /* Section for spacing */
-        .gap {
-            height: 20px; /* Adjust the height of the gap as needed */
-        }
-    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Logo section -->
-    <div class="logo">
-        <img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Logo" style="max-width: 100%; height: auto;">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">
+                <img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Logo" width="120" height="auto">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <img src="https://i.imgur.com/kWJUL9C.png" alt="Vape Box Hero" class="img-fluid">
+        <div class="hero-text">
+            <h1>Welcome to Vape.Box</h1>
+            <p>Explore our premium range of e-cigarettes and vape kits.</p>
+            <button class="btn btn-primary">Shop Now</button>
+        </div>
+    </section>
+
+    <div class="product-section container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="product-item">
+                    <img src="https://i.imgur.com/f4swShQ.jpeg" alt="Product 1" class="img-fluid">
+                    <h5 class="mt-2">Product Name</h5>
+                    <p class="product-price">$19.99</p>
+                    <button class="btn btn-primary">Add to Cart</button>
+                </div>
+            </div>
+            <!-- Repeat for other products -->
+        </div>
     </div>
 
-    <!-- Second image section -->
-    <div class="sample">
-        <img src="https://i.imgur.com/kWJUL9C.png" alt="Sample Image" style="max-width: 100%; height: auto;">
-    </div>
+    <footer class="footer bg-light mt-5 p-3 text-center">
+        <p>© 2024 Vape.Box. All Rights Reserved.</p>
+    </footer>
 
-    <!-- Contact information with NFT, LinkedIn, and Facebook icons -->
-    <div class="contact">
-        <a href="tel:+447783485026">
-            <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone Icon" width="30" height="30">
-        </a>
-        <a href="mailto:reon@vape.box">
-            <img src="https://cdn-icons-png.flaticon.com/512/455/455712.png" alt="Email Icon" width="30" height="30">
-        </a>
-        <a href="https://opensea.io/vape.box">
-            <img src="https://www.flaticon.com/svg/vstatic/svg/1031/10319200.svg?token=exp=1649208990~hmac=9e83fb8b77e375e19ac5b5df8a212d71" alt="NFT Icon" width="30" height="30">
-        </a>
-        <a href="https://www.linkedin.com/in/reon-franklyn-7a5733133">
-            <img src="https://cdn-icons-png.flaticon.com/512/3536/3536569.png" alt="LinkedIn Icon" width="30" height="30">
-        </a>
-        <!-- Facebook icon with hyperlink -->
-        <a href="https://www.facebook.com/groups/the.xrp.army/?ref=share">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384005.png" alt="Facebook Icon" width="30" height="30">
-        </a>
-    </div>
-
-    <!-- Gap section for spacing -->
-    <div class="gap"></div>
-
-    <!-- New image section -->
-    <div class="new-image">
-        <img src="https://i.imgur.com/f4swShQ.jpeg" alt="New Image" style="max-width: 100%; height: auto;">
-    </div>
-
-    <!-- Copyright notice -->
-    <p>© 2024 Vape.Box. All rights reserved.</p>
+    <script src="script.js"></script>
 </body>
 </html>
