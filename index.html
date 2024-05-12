@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vape.Box</title>
+
+    <!-- Open Graph tags for social media previews -->
+    <meta property="og:title" content="Vape.Box">
+    <meta property="og:description" content="Over 18s ONLY">
+    <meta property="og:url" content="https://vape.box">
+    <meta property="og:image" content="https://i.imgur.com/ghmaU1x.jpeg">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card tags for Twitter previews -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vape.Box">
+    <meta name="twitter:description" content="Over 18s ONLY">
+    <meta name="twitter:image" content="https://i.imgur.com/ghmaU1x.jpeg">
+
     <style>
         /* Prevent horizontal scrolling */
         html, body {
@@ -14,9 +28,8 @@
             padding: 0;
             box-sizing: border-box;
         }
-        body {
-            text-align: center;
-            background-color: white;
+        body.blur {
+            filter: blur(8px);
         }
         .popup {
             display: none;
@@ -27,61 +40,61 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.75);
             z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
         .popup-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
+            background-color: white;
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            background: white;
+            border-radius: 10px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
             text-align: center;
+            width: 300px;
         }
         button {
             padding: 10px 20px;
             margin: 10px;
-            cursor: pointer;
             font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Vape.Box!</h1>
-    <p>This is a content area that's initially visible behind the popup.</p>
-
-    <!-- Pop-up box -->
-    <div id="popupBox" class="popup">
-        <div class="popup-content">
-            <p>Are you over the age of 18?</p>
-            <button id="yesBtn">Yes</button>
-            <button id="noBtn">No</button>
+    <div class="content">
+        <!-- Logo section -->
+        <div class="logo">
+            <img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Logo" style="max-width: 100%; height: auto;">
         </div>
-    </div>
 
-    <script>
-        window.onload = function() {
-            // Show the popup after 3 seconds
-            setTimeout(function() {
-                document.getElementById('popupBox').style.display = 'block';
-            }, 3000);
+        <!-- Second image section -->
+        <div class="sample">
+            <img src="https://i.imgur.com/kWJUL9C.png" alt="Sample Image" style="max-width: 100%; height: auto;">
+        </div>
 
-            // Get the buttons and popup box
-            var yesBtn = document.getElementById('yesBtn');
-            var noBtn = document.getElementById('noBtn');
-            var popupBox = document.getElementById('popupBox');
+        <!-- Contact information with shopping bag, LinkedIn, and Facebook icons -->
+        <div class="contact">
+            <a href="tel:+447783485026">
+                <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone Icon" width="30" height="30">
+            </a>
+            <a href="mailto:reon@vape.box">
+                <img src="https://cdn-icons-png.flaticon.com/512/455/455712.png" alt="Email Icon" width="30" height="30">
+            </a>
+            <a href="https://opensea.io/vape.box">
+                <img src="https://cdn-icons-png.flaticon.com/512/102/102665.png" alt="Shopping Bag Icon" width="30" height="30">
+            </a>
+            <a href="https://www.linkedin.com/in/reon-franklyn-7a5733133">
+                <img src="https://cdn-icons-png.flaticon.com/512/3536/3536569.png" alt="LinkedIn Icon" width="30" height="30">
+            </a>
+            <a href="https://www.facebook.com/groups/the.xrp.army/?ref=share">
+                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384005.png" alt="Facebook Icon" width="30" height="30">
+            </a>
+        </div>
 
-            // Close the popup and allow browsing when "Yes" is clicked
-            yesBtn.onclick = function() {
-                popupBox.style.display = 'none';
-            };
+        <!-- Gap section for spacing -->
+        <div class="gap"></div>
 
-            // Redirect when "No" is clicked
-            noBtn.onclick = function() {
-                window.location.href = 'https://www.google.com';
-            };
-        }
-    </script>
-</body>
-</html>
+        <!-- New image section -->
