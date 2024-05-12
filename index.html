@@ -28,9 +28,37 @@
             padding: 0;
             box-sizing: border-box;
         }
-        body.blur {
-            filter: blur(8px);
+        body {
+            text-align: center;
+            background-color: white;
         }
+        .logo, .sample {
+            padding: 0;
+            margin: 0;
+        }
+        .contact {
+            margin-top: 10px;
+            display: inline-flex;
+            gap: 10px;
+        }
+        img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+        /* Section for spacing */
+        .gap {
+            height: 20px; /* Adjust the height of the gap as needed */
+        }
+        footer {
+            padding: 10px 0;
+            text-align: center;
+            background-color: transparent;
+            border-top: none; /* ensures no border is applied */
+        }
+
+        /* Popup specific styles */
         .popup {
             display: none;
             position: fixed;
@@ -42,18 +70,20 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            animation: fadeIn 0.5s ease-out forwards;
         }
         .popup-content {
             background-color: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 300px;
+            animation: slideIn 0.5s ease-out forwards;
         }
         button {
             padding: 10px 20px;
-            margin: 10px;
+            margin-top: 10px;
             font-size: 16px;
             cursor: pointer;
             border: none;
@@ -61,10 +91,19 @@
             color: white;
             border-radius: 5px;
         }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <div class="popup" id="popupBox">
+    <!-- Pop-up Overlay -->
+    <div id="popupBox" class="popup">
         <div class="popup-content">
             <p>Are you over the age of 18?</p>
             <button id="yesBtn">Yes</button>
@@ -72,29 +111,17 @@
         </div>
     </div>
 
-    <div class="content">
-        <!-- Logo section -->
-        <div class="logo">
-            <img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Logo" style="max-width: 100%; height: auto;">
-        </div>
+    <!-- Logo section -->
+    <div class="logo">
+        <img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Logo" style="max-width: 100%; height: auto;">
+    </div>
 
-        <!-- Second image section -->
-        <div class="sample">
-            <img src="https://i.imgur.com/kWJUL9C.png" alt="Sample Image" style="max-width: 100%; height: auto;">
-        </div>
+    <!-- Second image section -->
+    <div class="sample">
+        <img src="https://i.imgur.com/kWJUL9C.png" alt="Sample Image" style="max-width: 100%; height: auto;">
+    </div>
 
-        <!-- Contact information with shopping bag, LinkedIn, and Facebook icons -->
-        <div class="contact">
-            <a href="tel:+447783485026">
-                <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone Icon" width="30" height="30">
-            </a>
-            <a href="mailto:reon@vape.box">
-                <img src="https://cdn-icons-png.flaticon.com/512/455/455712.png" alt="Email Icon" width="30" height="30">
-            </a>
-            <a href="https://opensea.io/vape.box">
-                <img src="https://cdn-icons-png.flaticon.com/512/102/102665.png" alt="Shopping Bag Icon" width="30" height="30">
-            </a>
-            <a href="https://www.linkedin.com/in/reon-franklyn-7a5733133">
-                <img src="https://cdn-icons-png.flaticon.com/512/3536/3536569.png" alt="LinkedIn Icon" width="30" height="30">
-            </a>
-            <a href="https://www.facebook.com/groups/the.xrp.army/?ref=share
+    <!-- Contact information with shopping bag, LinkedIn, and Facebook icons -->
+    <div class="contact">
+        <a href="tel:+447783485026">
+            <img src="https://cdn-icons-png.flaticon.com/512/
