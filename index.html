@@ -25,68 +25,48 @@
         .logo, .sample, .contact, .gap, footer { padding: 0; margin: 0; }
         .contact { margin-top: 10px; display: inline-flex; gap: 10px; }
         .gap { height: 20px; }
-        footer { padding: 10px 0; text-align: center; background-color: transparent; font-size: 12px; /* Reduced font size */ }
+        footer { padding: 10px 0; text-align: center; background-color: transparent; font-size: 12px; }
 
         /* Popup styling */
         .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background: white; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1001; animation: popupAnim 0.5s ease-out forwards; }
         @keyframes popupAnim { from { opacity: 0; transform: translate(-50%, -40%); } to { opacity: 1; transform: translate(-50%, -50%); } }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; }
+
+        /* Smoke animation */
+        @keyframes smokeRise {
+            0% { transform: translateY(100px) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-800px) scale(1.5); opacity: 0; }
+        }
+
+        .smoke {
+            position: absolute;
+            bottom: 0;
+            width: 100px;
+            height: 100px;
+            background: url('https://i.imgur.com/ZzE2kzU.png') no-repeat center center; /* Smoke image link */
+            background-size: contain;
+            animation: smokeRise 10s ease-out infinite;
+        }
+
+        .smoke:nth-child(1) { left: 20%; animation-delay: 0s; }
+        .smoke:nth-child(2) { left: 40%; animation-delay: 3s; }
+        .smoke:nth-child(3) { left: 60%; animation-delay: 5s; }
+        .smoke:nth-child(4) { left: 80%; animation-delay: 8s; }
     </style>
 </head>
 <body>
     <!-- Existing content -->
     <div class="logo"><img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Logo"></div>
     <div class="sample"><img src="https://i.imgur.com/kWJUL9C.png" alt="Sample Image"></div>
-    <div class="contact">
-        <!-- Existing icons -->
-        <!-- Contact links and social media icons -->
-    </div>
+    <div class="contact"></div>
     <div class="gap"></div>
     <div class="new-image"><img src="https://i.imgur.com/f4swShQ.jpeg" alt="New Image"></div>
-    <!-- Contact information with shopping bag, LinkedIn, and Facebook icons -->
-    <div class="contact">
-        <a href="tel:+447783485026">
-            <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone Icon" width="30" height="30">
-        </a>
-        <a href="mailto:reon@vape.box">
-            <img src="https://cdn-icons-png.flaticon.com/512/455/455712.png" alt="Email Icon" width="30" height="30">
-        </a>
-        <a href="https://opensea.io/vape.box">
-            <img src="https://cdn-icons-png.flaticon.com/512/102/102665.png" alt="Shopping Bag Icon" width="30" height="30">
-        </a>
-        <a href="https://www.linkedin.com/in/reon-franklyn-7a5733133">
-            <img src="https://cdn-icons-png.flaticon.com/512/3536/3536569.png" alt="LinkedIn Icon" width="30" height="30">
-        </a>
-        <!-- Facebook icon with hyperlink -->
-        <a href="https://www.facebook.com/groups/the.xrp.army/?ref=share">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384005.png" alt="Facebook Icon" width="30" height="30">
-        </a>
-    </div>
-    <footer>© 2024 Vape.Box. All Rights Reserved</footer>
+    
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
 
-    <!-- Popup HTML -->
-    <div class="overlay" id="overlay" style="display: block;"></div>
-    <div class="popup" id="popup" style="display: block;">
-        <h2>Are You Over 18?</h2>
-        <button onclick="closePopup()">Yes</button>
-        <button onclick="redirect()">No</button>
-    </div>
-
-    <!-- Popup JavaScript -->
-    <script>
-        function showPopup() {
-            document.getElementById('popup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-        function redirect() {
-            window.location.href = "https://www.nhs.uk/live-well/quit-smoking/nhs-stop-smoking-services-help-you-quit/";
-        }
-        window.onload = showPopup; // This will load the popup as soon as the window loads
-    </script>
-
-</body>
-</html>
+    <footer>
+        <div class="contact">
+            <a href="tel:+447783485026"><img src="https://cdn-icons-png.flaticon.com/
