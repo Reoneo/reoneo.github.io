@@ -10,17 +10,53 @@
         body {
             margin: 0;
             overflow: hidden;
+            background-color: #000; /* Set background color */
+            font-family: Arial, sans-serif; /* Set font family */
         }
         canvas {
             display: block;
         }
+        footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #fff; /* Set footer text color */
+        }
     </style>
 </head>
 <body>
+    <div id="canvas-wrapper" aria-label="floating"></div>
+    <footer>
+        <h3>Mail: <a href="mailto:what@a.email">what@a.email</a></h3>
+    </footer>
     <script>
-        // Paste your JavaScript code here
-        // Make sure to include the entire code snippet you provided
-        // with the necessary <script> tags wrapping it.
+        // JavaScript code for your Three.js animation
+        const width = window.innerWidth, height = window.innerHeight;
+
+        // init
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 1;
+        
+        const scene = new THREE.Scene();
+        
+        const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+        const material = new THREE.MeshNormalMaterial();
+        
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(width, height);
+        document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+        
+        // animation
+        function animate(time) {
+            mesh.rotation.x = time / 2000;
+            mesh.rotation.y = time / 1000;
+            renderer.render(scene, camera);
+        }
+
+        renderer.setAnimationLoop(animate);
     </script>
 </body>
 </html>
