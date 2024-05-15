@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jungle Side Scroller Game</title>
+    <title>3D Scene with Three.js</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include FontLoader and TextGeometry -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #87CEEB; /* Light blue sky background */
+            background-color: #00FFFF; /* Cyan background */
             font-family: Arial, sans-serif;
         }
         canvas {
@@ -27,122 +30,106 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Set camera position
-        camera.position.z = 5;
-        camera.position.y = 2;
-
         // Add ambient light
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
 
-        // Ground setup
-        const groundGeometry = new THREE.PlaneGeometry(100, 10);
-        const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x228B22, side: THREE.DoubleSide });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2;
-        ground.position.y = -1;
-        scene.add(ground);
+        // Create the 3D text object
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) {
+            const textGeometry = new THREE.TextGeometry('Vape.box', {
+                font: font,
+                size: 1,
+                height: 0.5,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 0.1,
+                bevelSize: 0.05,
+                bevelOffset: 0,
+                bevelSegments: 5
+            });
+            const textMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.set(-2.5, 0, 0);
+            scene.add(textMesh);
+        });
 
-        // Jungle background setup (simple trees)
-        function createTree(x, y, z) {
-            const trunkGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2, 12);
-            const trunkMaterial = new THREE.MeshBasicMaterial({ color: 0x8B4513 });
-            const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+        // Create cubes
+        const createCube = (color1, color2) => {
+            const materials = [
+                new THREE.MeshBasicMaterial({ color: color1 }),
+                new THREE.MeshBasicMaterial({ color: color1 }),
+                new THREE.MeshBasicMaterial({ color: color1 }),
+                new THREE.MeshBasicMaterial({ color: color1 }),
+                new THREE.MeshBasicMaterial({ color: color2 }),
+                new THREE.MeshBasicMaterial({ color: color2 })
+            ];
+            const geometry = new THREE.BoxGeometry();
+            return new THREE.Mesh(geometry, materials);
+        };
 
-            const leavesGeometry = new THREE.SphereGeometry(1, 12, 12);
-            const leavesMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-            const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
-            leaves.position.y = 1.5;
-
-            const tree = new THREE.Group();
-            tree.add(trunk);
-            tree.add(leaves);
-            tree.position.set(x, y, z);
-            return tree;
+        // Position cubes
+        for (let i = 0; i < 25; i++) {
+            const cube = createCube(0xffa500, 0x808080);
+            cube.position.set(Math.random() * 20 - 10, Math.random() * 10 - 5, Math.random() * 20 - 10);
+            scene.add(cube);
+        }
+        for (let i = 0; i < 25; i++) {
+            const cube = createCube(0x800080, 0xff0000);
+            cube.position.set(Math.random() * 20 - 10, Math.random() * 10 - 5, Math.random() * 20 - 10);
+            scene.add(cube);
         }
 
-        for (let i = -20; i < 20; i += 5) {
-            scene.add(createTree(i, 0, -5));
-        }
-
-        // Player setup
-        const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const playerMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
-        const player = new THREE.Mesh(playerGeometry, playerMaterial);
-        player.position.y = 0.5;
-        scene.add(player);
-
-        // Controls
-        let moveLeft = false;
-        let moveRight = false;
-        let isJumping = false;
-        let velocityY = 0;
-        const gravity = -0.01;
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowLeft') moveLeft = true;
-            if (event.key === 'ArrowRight') moveRight = true;
-            if (event.key === 'ArrowUp' && !isJumping) {
-                isJumping = true;
-                velocityY = 0.2;
+        // Camera animation
+        let zoomLevel = 50;
+        function zoomIn() {
+            if (zoomLevel > 5) {
+                zoomLevel -= 0.5;
+                camera.position.z = zoomLevel;
+                camera.rotation.y += 0.01;
+                requestAnimationFrame(zoomIn);
             }
+        }
+        zoomIn();
+
+        // Handle swipe events
+        let startX, startY, endX, endY;
+        document.addEventListener('touchstart', (event) => {
+            startX = event.touches[0].clientX;
+            startY = event.touches[0].clientY;
         });
 
-        document.addEventListener('keyup', (event) => {
-            if (event.key === 'ArrowLeft') moveLeft = false;
-            if (event.key === 'ArrowRight') moveRight = false;
+        document.addEventListener('touchend', (event) => {
+            endX = event.changedTouches[0].clientX;
+            endY = event.changedTouches[0].clientY;
+            handleSwipe();
         });
 
-        // Obstacles setup
-        function createObstacle(x, y, z) {
-            const obstacleGeometry = new THREE.BoxGeometry(1, 1, 1);
-            const obstacleMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            const obstacle = new THREE.Mesh(obstacleGeometry, obstacleMaterial);
-            obstacle.position.set(x, y, z);
-            return obstacle;
-        }
-
-        const obstacles = [];
-        for (let i = -10; i < 20; i += 5) {
-            const obstacle = createObstacle(i, 0.5, 0);
-            obstacles.push(obstacle);
-            scene.add(obstacle);
-        }
-
-        // Collision detection
-        function detectCollision(object1, object2) {
-            const object1Box = new THREE.Box3().setFromObject(object1);
-            const object2Box = new THREE.Box3().setFromObject(object2);
-            return object1Box.intersectsBox(object2Box);
+        function handleSwipe() {
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (deltaX > 0) {
+                    // Swipe right
+                    camera.rotation.y -= Math.PI / 8;
+                } else {
+                    // Swipe left
+                    camera.rotation.y += Math.PI / 8;
+                }
+            } else {
+                if (deltaY > 0) {
+                    // Swipe down
+                    camera.rotation.x -= Math.PI / 8;
+                } else {
+                    // Swipe up
+                    camera.rotation.x += Math.PI / 8;
+                }
+            }
         }
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-
-            if (moveLeft) player.position.x -= 0.05;
-            if (moveRight) player.position.x += 0.05;
-
-            // Apply gravity
-            if (isJumping) {
-                player.position.y += velocityY;
-                velocityY += gravity;
-                if (player.position.y <= 0.5) {
-                    player.position.y = 0.5;
-                    isJumping = false;
-                }
-            }
-
-            // Detect collisions with obstacles
-            obstacles.forEach(obstacle => {
-                if (detectCollision(player, obstacle)) {
-                    alert('Game Over!');
-                    player.position.set(0, 0.5, 0);
-                }
-            });
-
-            // Move camera with player
-            camera.position.x = player.position.x;
             renderer.render(scene, camera);
         }
         animate();
