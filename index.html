@@ -3,135 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expensive Landing Page</title>
+    <title>Vape.₿ox</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Include OrbitControls -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background: linear-gradient(45deg, #ffafbd, #ffc3a0); /* Gradient background */
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            color: #fff;
+            background-color: #000; /* Set background color */
+            font-family: Arial, sans-serif; /* Set font family */
         }
         canvas {
             display: block;
         }
-        .content {
+        footer {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 1;
-        }
-        .content h1 {
-            font-size: 3em;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-        .content p {
-            font-size: 1.2em;
-            margin: 10px 0 0;
-            color: #fff;
-        }
-        .content button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1em;
-            color: #fff;
-            background-color: #ff6b6b;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .content button:hover {
-            background-color: #ff4e4e;
+            bottom: 20px;
+            left: 20px;
+            color: #fff; /* Set footer text color */
         }
     </style>
 </head>
 <body>
     <div id="canvas-wrapper" aria-label="floating"></div>
-    <div class="content">
-        <h1>Expensive Landing</h1>
-        <p>Experience luxury like never before</p>
-        <button>Get Started</button>
-    </div>
+ 
+    </footer>
     <script>
-        // JavaScript code for Three.js animation
+        // JavaScript code for your Three.js animation
         const width = window.innerWidth, height = window.innerHeight;
 
-        // Init
+        // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
         camera.position.z = 1;
-
+        
         const scene = new THREE.Scene();
-
-        // Add lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-
-        const pointLight = new THREE.PointLight(0xffffff, 1);
-        pointLight.position.set(5, 5, 5);
-        scene.add(pointLight);
-
-        // Create multiple 3D objects
-        const objects = [];
-        const geometry = new THREE.TorusKnotGeometry(0.2, 0.05, 100, 16);
-        const material = new THREE.MeshStandardMaterial({ color: 0xff6347, metalness: 0.7, roughness: 0.2 });
-
-        for (let i = 0; i < 10; i++) {
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(2);
-            mesh.rotation.set(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
-            scene.add(mesh);
-            objects.push(mesh);
-        }
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+        const material = new THREE.MeshNormalMaterial();
+        
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
-
-        // OrbitControls for camera movement
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Enable damping for smoother motion
-        controls.dampingFactor = 0.05;
-
-        // Animation
+        
+        // animation
         function animate(time) {
-            objects.forEach(mesh => {
-                mesh.rotation.x += 0.01;
-                mesh.rotation.y += 0.01;
-            });
-            controls.update();
+            mesh.rotation.x = time / 2000;
+            mesh.rotation.y = time / 1000;
             renderer.render(scene, camera);
         }
 
         renderer.setAnimationLoop(animate);
-
-        // Resize handling
-        window.addEventListener('resize', () => {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            renderer.setSize(width, height);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-        });
-
-        // Mouse move event listener for interaction
-        document.addEventListener('mousemove', (event) => {
-            const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            camera.position.x = mouseX * 0.5;
-            camera.position.y = mouseY * 0.5;
-            camera.lookAt(scene.position);
-        });
     </script>
 </body>
 </html>
