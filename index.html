@@ -1,83 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape.₿0x</title>
-    <!-- Include Three.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #000; /* Set background color */
-            font-family: Arial, sans-serif; /* Set font family */
-        }
-        canvas {
-            display: block;
-        }
-        header {
-            width: 100%;
-            height: auto;
-        }
-        header img {
-            width: 100%;
-            height: auto;
-        }
-        footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            color: #fff; /* Set footer text color */
-            text-align: center;
-            background-color: #000; /* Footer background color */
-            padding: 10px;
-        }
-        .contact {
-            color: #fff; /* Ensure contact text is white */
-        }
-        .contact img {
-            margin: 0 10px; /* Spacing between icons */
-        }
-    </style>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <title>vape.box</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <header>
-        <img src="https://i.imgur.com/6Rq8DEQ.png" alt="Vape Banner">
-    </header>
     <div id="canvas-wrapper" aria-label="floating"></div>
+    <footer>
 
- 
-
+    </footer>
     <script>
-        // JavaScript code for your Three.js animation
-        const width = window.innerWidth, height = window.innerHeight;
-
-        // init
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 1;
-        
-        const scene = new THREE.Scene();
-        
-        const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-        const material = new THREE.MeshNormalMaterial();
-        
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-        
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(width, height);
-        document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
-        
-        // animation
-        function animate(time) {
-            mesh.rotation.x = time / 2000;
-            mesh.rotation.y = time / 1000;
-            renderer.render(scene, camera);
-        }
-
-        renderer.setAnimationLoop(animate);
+        var domain = document.domain;
+        document.title = domain;
     </script>
+    <script src='three.min.js'></script>
+    <script src='TweenMax.min.js'></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
