@@ -41,7 +41,7 @@
 
         // init
         const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        camera.position.z = 15; // Start the camera far away
+        camera.position.z = 25; // Start the camera further away
 
         const scene = new THREE.Scene();
 
@@ -63,7 +63,7 @@
         // Load the font and create text
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-            const geometry = new THREE.TextGeometry('Vape.₿ox', {
+            const geometry = new THREE.TextGeometry('Vape.box', {
                 font: font,
                 size: 1,
                 height: 0.2,
@@ -98,10 +98,10 @@
             scene.add(textMesh);
 
             // Zoom animation with easing
-            let zoomLevel = 15;
+            let zoomLevel = 25;
             function zoomAnimation() {
-                if (zoomLevel > 7) {
-                    zoomLevel -= 0.2 * (zoomLevel / 15);
+                if (zoomLevel > 15) {
+                    zoomLevel -= 0.2 * (zoomLevel / 25);
                     camera.position.z = zoomLevel;
                     requestAnimationFrame(zoomAnimation);
                 }
@@ -117,49 +117,32 @@
             renderer.setAnimationLoop(animate);
         });
 
-        // Add hyperlink text
-        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-            const geometry = new THREE.TextGeometry('Email', {
-                font: font,
-                size: 0.5,
-                height: 0.1,
-                curveSegments: 12,
-                bevelEnabled: true,
-                bevelThickness: 0.03,
-                bevelSize: 0.02,
-                bevelOffset: 0,
-                bevelSegments: 5
-            });
+        // Create the email icon (a simple cube as a placeholder for the email icon)
+        const emailGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+        const emailMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.5, roughness: 0.1 });
+        const emailMesh = new THREE.Mesh(emailGeometry, emailMaterial);
+        scene.add(emailMesh);
 
-            geometry.computeBoundingBox();
-            geometry.computeVertexNormals();
+        // Position the email icon
+        emailMesh.position.set(0, -2, 0);
 
-            const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.5, roughness: 0.1 });
-            const emailMesh = new THREE.Mesh(geometry, material);
-            
-            // Position the text
-            const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-            emailMesh.position.x = centerOffset;
-            emailMesh.position.y = -2;
-            emailMesh.position.z = 0;
+        // Orbit animation for the email icon
+        function orbitAnimation(time) {
+            emailMesh.position.x = 2 * Math.cos(time / 1000);
+            emailMesh.position.y = 2 * Math.sin(time / 1000) - 2;
+            emailMesh.rotation.x += 0.01;
+            emailMesh.rotation.y += 0.01;
+            requestAnimationFrame(orbitAnimation);
+        }
+        orbitAnimation(0);
 
-            emailMesh.userData = { URL: 'mailto:reononline@gmail.com' };
-            emailMesh.cursor = 'pointer';
-
-            emailMesh.onClick = function () {
-                window.location.href = emailMesh.userData.URL;
-            };
-
-            // Add slow random movement to the email text
-            function randomMovement() {
-                emailMesh.position.x += (Math.random() - 0.5) * 0.01;
-                emailMesh.position.y += (Math.random() - 0.5) * 0.01;
-                emailMesh.position.z += (Math.random() - 0.5) * 0.01;
-                requestAnimationFrame(randomMovement);
-            }
-            randomMovement();
-
-            scene.add(emailMesh);
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
         });
 
         // Add stars
@@ -175,14 +158,14 @@
 
         Array(200).fill().forEach(addStar);
 
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            renderer.setSize(width, height);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-        });
+        // Camera movement animation
+        function cameraAnimation(time) {
+            camera.position.x = Math.sin(time / 2000) * 10;
+            camera.position.y = Math.sin(time / 1000) * 5;
+            camera.lookAt(0, 0, 0);
+            requestAnimationFrame(cameraAnimation);
+        }
+        cameraAnimation(0);
 
         // Handle clicks for hyperlink
         renderer.domElement.addEventListener('click', (event) => {
@@ -196,8 +179,8 @@
 
             const intersects = raycaster.intersectObjects(scene.children);
             for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object.onClick) {
-                    intersects[i].object.onClick();
+                if (intersects[i].object === emailMesh) {
+                    window.location.href = 'mailto:reononline@gmail.com';
                     break;
                 }
             }
