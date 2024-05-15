@@ -31,7 +31,7 @@
 <body>
     <div id="canvas-wrapper" aria-label="floating"></div>
     <footer>
-        Creative 3D Text Animation
+        Vape.₿ox
     </footer>
     <script>
         // JavaScript code for your Three.js animation
@@ -57,7 +57,7 @@
 
         // Load the font and create text
         const loader = new THREE.FontLoader();
-        loader.load('path/to/helvetiker_regular.typeface.json', (font) => {
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
             const geometry = new THREE.TextGeometry('Vape.₿ox', {
                 font: font,
                 size: 1,
@@ -70,14 +70,28 @@
                 bevelSegments: 5
             });
 
+            geometry.computeBoundingBox();
+            geometry.computeVertexNormals();
+
             const material = new THREE.MeshStandardMaterial({ color: 0xff6347, metalness: 0.5, roughness: 0.1 });
             const textMesh = new THREE.Mesh(geometry, material);
-            scene.add(textMesh);
             
             // Center the text
-            geometry.computeBoundingBox();
             const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
             textMesh.position.x = centerOffset;
+            textMesh.position.y = -0.5;
+            textMesh.position.z = 0;
+
+            scene.add(textMesh);
+
+            // animation
+            function animate(time) {
+                textMesh.rotation.x = time / 2000;
+                textMesh.rotation.y = time / 1000;
+                renderer.render(scene, camera);
+            }
+
+            renderer.setAnimationLoop(animate);
         });
 
         // Add stars
@@ -92,13 +106,6 @@
         }
 
         Array(200).fill().forEach(addStar);
-
-        // animation
-        function animate(time) {
-            renderer.render(scene, camera);
-        }
-
-        renderer.setAnimationLoop(animate);
 
         // Handle window resize
         window.addEventListener('resize', () => {
