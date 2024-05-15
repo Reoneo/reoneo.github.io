@@ -1,34 +1,32 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #000;
-    color: #fff;
-    font-family: Arial, sans-serif;
-}
+// Basic Three.js setup
+const canvasWrapper = document.getElementById('canvas-wrapper');
+const width = canvasWrapper.clientWidth;
+const height = canvasWrapper.clientHeight;
 
-#canvas-wrapper {
-    width: 100%;
-    height: 80vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
 
-footer {
-    margin-top: 20px;
-}
+renderer.setSize(width, height);
+canvasWrapper.appendChild(renderer.domElement);
 
-footer a {
-    color: #00f;
-    text-decoration: none;
-}
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
 
-footer a:hover {
-    text-decoration: underline;
-}
+camera.position.z = 5;
+
+const animate = function () {
+    requestAnimationFrame(animate);
+
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
+};
+
+animate();
+
+// Example of using TweenMax for animation
+TweenMax.to(cube.position, 2, { x: 2, yoyo: true, repeat: -1, ease: "power1.inOut" });
