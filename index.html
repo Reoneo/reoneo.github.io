@@ -98,89 +98,65 @@
             scene.add(textMesh);
         });
 
-        // Create the cube with the Facebook logo on each side
-        const cubeSize = 2;
-        const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-        const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x1877f2 });
+        // Create the Facebook logo texture
+        function createFacebookTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#1877f2';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.font = 'bold 300px Arial';
+            context.fillStyle = '#ffffff';
+            context.fillText('f', 130, 350);
+            return new THREE.CanvasTexture(canvas);
+        }
 
-        const faceGeometries = [];
-        const faceMaterials = [];
-        const textLoader = new THREE.FontLoader();
+        const facebookTexture = createFacebookTexture();
+        const cubeMaterials = [
+            new THREE.MeshBasicMaterial({ map: facebookTexture }),
+            new THREE.MeshBasicMaterial({ map: facebookTexture }),
+            new THREE.MeshBasicMaterial({ map: facebookTexture }),
+            new THREE.MeshBasicMaterial({ map: facebookTexture }),
+            new THREE.MeshBasicMaterial({ map: facebookTexture }),
+            new THREE.MeshBasicMaterial({ map: facebookTexture }),
+        ];
 
-        textLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', (font) => {
-            for (let i = 0; i < 6; i++) {
-                const faceGeometry = new THREE.PlaneGeometry(cubeSize, cubeSize);
-                const textGeometry = new THREE.TextGeometry('f', {
-                    font: font,
-                    size: 1,
-                    height: 0.1,
-                    curveSegments: 12,
-                    bevelEnabled: true,
-                    bevelThickness: 0.03,
-                    bevelSize: 0.02,
-                    bevelOffset: 0,
-                    bevelSegments: 5
-                });
+        // Create the Facebook logo cube
+        const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
 
-                const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-                const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        // Position the cube
+        cube.position.set(0, -2, 0);
 
-                // Position the "f" symbol on the plane
-                textMesh.position.set(-0.25, -0.5, 0.1);
+        // Add rotation animation
+        function rotateCube(time) {
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+            requestAnimationFrame(rotateCube);
+        }
+        rotateCube(0);
 
-                const face = new THREE.Mesh(faceGeometry, cubeMaterial);
-                face.add(textMesh);
+        // Add the cube to the scene
+        scene.add(cube);
 
-                const canvas = document.createElement('canvas');
-                canvas.width = 512;
-                canvas.height = 512;
-                const context = canvas.getContext('2d');
-                context.fillStyle = '#1877f2';
-                context.fillRect(0, 0, canvas.width, canvas.height);
-                context.font = 'bold 300px Arial';
-                context.fillStyle = '#ffffff';
-                context.fillText('f', 130, 350);
+        // Make the cube a hyperlink
+        renderer.domElement.addEventListener('click', (event) => {
+            const mouse = new THREE.Vector2(
+                (event.clientX / window.innerWidth) * 2 - 1,
+                -(event.clientY / window.innerHeight) * 2 + 1
+            );
 
-                const texture = new THREE.CanvasTexture(canvas);
-                const material = new THREE.MeshBasicMaterial({ map: texture });
-                faceGeometries.push(faceGeometry);
-                faceMaterials.push(material);
-            }
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
 
-            const cube = new THREE.Mesh(cubeGeometry, faceMaterials);
-
-            // Position the cube
-            cube.position.set(0, -2, 0);
-
-            // Add rotation animation
-            function rotateCube(time) {
-                cube.rotation.x += 0.01;
-                cube.rotation.y += 0.01;
-                requestAnimationFrame(rotateCube);
-            }
-            rotateCube(0);
-
-            // Add the cube to the scene
-            scene.add(cube);
-
-            // Make the cube a hyperlink
-            renderer.domElement.addEventListener('click', (event) => {
-                const mouse = new THREE.Vector2(
-                    (event.clientX / window.innerWidth) * 2 - 1,
-                    -(event.clientY / window.innerHeight) * 2 + 1
-                );
-
-                const raycaster = new THREE.Raycaster();
-                raycaster.setFromCamera(mouse, camera);
-
-                const intersects = raycaster.intersectObjects(scene.children);
-                for (let i = 0; i < intersects.length; i++) {
-                    if (intersects[i].object === cube) {
-                        window.location.href = 'mailto:reononline@gmail.com';
-                        break;
-                    }
+            const intersects = raycaster.intersectObjects(scene.children);
+            for (let i = 0; i < intersects.length; i++) {
+                if (intersects[i].object === cube) {
+                    window.location.href = 'mailto:reononline@gmail.com';
+                    break;
                 }
-            });
+            }
         });
 
         // Handle window resize
