@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape.₿ox</title>
+    <title>Three.js Text Animation</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- Include FontLoader -->
@@ -33,7 +33,7 @@
 <body>
     <div id="canvas-wrapper" aria-label="floating"></div>
     <footer>
-        Vape.₿ox
+        Creative 3D Text Animation
     </footer>
     <script>
         // JavaScript code for your Three.js animation
@@ -62,8 +62,8 @@
 
         // Load the font and create text
         const loader = new THREE.FontLoader();
-        loader.load('path/to/comic_sans_ms_regular.typeface.json', (font) => {
-            const geometry = new THREE.TextGeometry('Vape.₿ox', {
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+            const geometry = new THREE.TextGeometry('Vape.box', {
                 font: font,
                 size: 1,
                 height: 0.2,
@@ -118,7 +118,7 @@
         });
 
         // Add hyperlink text
-        loader.load('path/to/comic_sans_ms_regular.typeface.json', (font) => {
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
             const geometry = new THREE.TextGeometry('Email', {
                 font: font,
                 size: 0.5,
