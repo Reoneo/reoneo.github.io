@@ -6,6 +6,8 @@
     <title>Three.js Text Animation</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include GLTFLoader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <!-- Include FontLoader -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
     <!-- Include TextGeometry -->
@@ -117,40 +119,44 @@
             renderer.setAnimationLoop(animate);
         });
 
-        // Create the email icon (envelope shape)
-        const emailGroup = new THREE.Group();
+        // Load the email icon (envelope) model
+        const gltfLoader = new THREE.GLTFLoader();
+        gltfLoader.load('path/to/your/email_emoji_model.glb', (gltf) => {
+            const emailIcon = gltf.scene;
+            emailIcon.scale.set(0.5, 0.5, 0.5);
+            emailIcon.position.set(0, -2, 0);
 
-        const envelopeBodyGeometry = new THREE.BoxGeometry(1.5, 1, 0.1);
-        const envelopeBodyMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.5, roughness: 0.1 });
-        const envelopeBody = new THREE.Mesh(envelopeBodyGeometry, envelopeBodyMaterial);
-        emailGroup.add(envelopeBody);
+            // Orbit animation for the email icon
+            function orbitAnimation(time) {
+                emailIcon.position.x = 2 * Math.cos(time / 1000);
+                emailIcon.position.y = 2 * Math.sin(time / 1000) - 2;
+                emailIcon.rotation.x += 0.01;
+                emailIcon.rotation.y += 0.01;
+                requestAnimationFrame(orbitAnimation);
+            }
+            orbitAnimation(0);
 
-        const envelopeFlapGeometry = new THREE.Geometry();
-        envelopeFlapGeometry.vertices.push(
-            new THREE.Vector3(-0.75, 0, 0),
-            new THREE.Vector3(0.75, 0, 0),
-            new THREE.Vector3(0, 0.5, 0)
-        );
-        envelopeFlapGeometry.faces.push(new THREE.Face3(0, 1, 2));
-        const envelopeFlapMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.5, roughness: 0.1 });
-        const envelopeFlap = new THREE.Mesh(envelopeFlapGeometry, envelopeFlapMaterial);
-        envelopeFlap.position.y = 0.5;
-        emailGroup.add(envelopeFlap);
+            scene.add(emailIcon);
 
-        scene.add(emailGroup);
+            // Handle clicks for hyperlink
+            renderer.domElement.addEventListener('click', (event) => {
+                const mouse = new THREE.Vector2(
+                    (event.clientX / window.innerWidth) * 2 - 1,
+                    -(event.clientY / window.innerHeight) * 2 + 1
+                );
 
-        // Position the email icon
-        emailGroup.position.set(0, -2, 0);
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, camera);
 
-        // Orbit animation for the email icon
-        function orbitAnimation(time) {
-            emailGroup.position.x = 2 * Math.cos(time / 1000);
-            emailGroup.position.y = 2 * Math.sin(time / 1000) - 2;
-            emailGroup.rotation.x += 0.01;
-            emailGroup.rotation.y += 0.01;
-            requestAnimationFrame(orbitAnimation);
-        }
-        orbitAnimation(0);
+                const intersects = raycaster.intersectObjects(scene.children);
+                for (let i = 0; i < intersects.length; i++) {
+                    if (intersects[i].object === emailIcon) {
+                        window.location.href = 'mailto:reononline@gmail.com';
+                        break;
+                    }
+                }
+            });
+        });
 
         // Handle window resize
         window.addEventListener('resize', () => {
@@ -183,24 +189,6 @@
         }
         cameraAnimation(0);
 
-        // Handle clicks for hyperlink
-        renderer.domElement.addEventListener('click', (event) => {
-            const mouse = new THREE.Vector2(
-                (event.clientX / window.innerWidth) * 2 - 1,
-                -(event.clientY / window.innerHeight) * 2 + 1
-            );
-
-            const raycaster = new THREE.Raycaster();
-            raycaster.setFromCamera(mouse, camera);
-
-            const intersects = raycaster.intersectObjects(scene.children);
-            for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object === emailGroup) {
-                    window.location.href = 'mailto:reononline@gmail.com';
-                    break;
-                }
-            }
-        });
     </script>
 </body>
 </html>
