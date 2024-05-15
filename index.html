@@ -140,11 +140,20 @@
         const ethereumCube = createLogoCube({ x: -5, y: 5, z: -20 }, 'ETH', '#3c3c3d');
         const xrpCube = createLogoCube({ x: 5, y: 5, z: -20 }, 'XRP', '#25a768');
 
-        // Make the cubes hyperlinks
-        renderer.domElement.addEventListener('click', (event) => {
+        // Function to handle click and touch events
+        function handleInteraction(event) {
+            let x, y;
+            if (event.type === 'touchstart') {
+                x = event.touches[0].clientX;
+                y = event.touches[0].clientY;
+            } else {
+                x = event.clientX;
+                y = event.clientY;
+            }
+
             const mouse = new THREE.Vector2(
-                (event.clientX / window.innerWidth) * 2 - 1,
-                -(event.clientY / window.innerHeight) * 2 + 1
+                (x / window.innerWidth) * 2 - 1,
+                -(y / window.innerHeight) * 2 + 1
             );
 
             const raycaster = new THREE.Raycaster();
@@ -157,7 +166,11 @@
                     break;
                 }
             }
-        });
+        }
+
+        // Add event listeners for both click and touch events
+        renderer.domElement.addEventListener('click', handleInteraction);
+        renderer.domElement.addEventListener('touchstart', handleInteraction);
 
         // Handle window resize
         window.addEventListener('resize', () => {
