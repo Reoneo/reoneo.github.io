@@ -6,22 +6,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <meta charset="UTF-8">
-    <title>vape.box</title>
-    <link rel="stylesheet" href="style.css">
+    <title>5.box</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #canvas-wrapper {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0; /* Example background color */
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="canvas-wrapper" aria-label="floating"></div>
+
+    <div id="canvas-wrapper" aria-label="floating">Canvas Area</div>
     <footer>
-  
+        <h3>Mail: <a href="mailto:what@a.email">what@a.email</a></h3>
     </footer>
+
     <script>
         var domain = document.domain;
         document.title = domain;
     </script>
-    <script src='https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/gsap@3.7.1/dist/gsap.min.js'></script>
-    <script src="script.js"></script>
+    
+    <script>
+        // Placeholder for script.js content
+        // Add any custom JavaScript here
+        console.log('Custom script loaded.');
+    </script>
+
 </body>
 
 </html>
