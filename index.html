@@ -117,21 +117,37 @@
             renderer.setAnimationLoop(animate);
         });
 
-        // Create the email icon (a simple cube as a placeholder for the email icon)
-        const emailGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-        const emailMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.5, roughness: 0.1 });
-        const emailMesh = new THREE.Mesh(emailGeometry, emailMaterial);
-        scene.add(emailMesh);
+        // Create the email icon (envelope shape)
+        const emailGroup = new THREE.Group();
+
+        const envelopeBodyGeometry = new THREE.BoxGeometry(1.5, 1, 0.1);
+        const envelopeBodyMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.5, roughness: 0.1 });
+        const envelopeBody = new THREE.Mesh(envelopeBodyGeometry, envelopeBodyMaterial);
+        emailGroup.add(envelopeBody);
+
+        const envelopeFlapGeometry = new THREE.Geometry();
+        envelopeFlapGeometry.vertices.push(
+            new THREE.Vector3(-0.75, 0, 0),
+            new THREE.Vector3(0.75, 0, 0),
+            new THREE.Vector3(0, 0.5, 0)
+        );
+        envelopeFlapGeometry.faces.push(new THREE.Face3(0, 1, 2));
+        const envelopeFlapMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00, metalness: 0.5, roughness: 0.1 });
+        const envelopeFlap = new THREE.Mesh(envelopeFlapGeometry, envelopeFlapMaterial);
+        envelopeFlap.position.y = 0.5;
+        emailGroup.add(envelopeFlap);
+
+        scene.add(emailGroup);
 
         // Position the email icon
-        emailMesh.position.set(0, -2, 0);
+        emailGroup.position.set(0, -2, 0);
 
         // Orbit animation for the email icon
         function orbitAnimation(time) {
-            emailMesh.position.x = 2 * Math.cos(time / 1000);
-            emailMesh.position.y = 2 * Math.sin(time / 1000) - 2;
-            emailMesh.rotation.x += 0.01;
-            emailMesh.rotation.y += 0.01;
+            emailGroup.position.x = 2 * Math.cos(time / 1000);
+            emailGroup.position.y = 2 * Math.sin(time / 1000) - 2;
+            emailGroup.rotation.x += 0.01;
+            emailGroup.rotation.y += 0.01;
             requestAnimationFrame(orbitAnimation);
         }
         orbitAnimation(0);
@@ -160,9 +176,9 @@
 
         // Camera movement animation
         function cameraAnimation(time) {
-            camera.position.x = Math.sin(time / 2000) * 10;
-            camera.position.y = Math.sin(time / 1000) * 5;
-            camera.lookAt(0, 0, 0);
+            camera.position.x = Math.sin(time / 5000) * 10;
+            camera.position.y = Math.sin(time / 3000) * 5;
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
             requestAnimationFrame(cameraAnimation);
         }
         cameraAnimation(0);
@@ -179,7 +195,7 @@
 
             const intersects = raycaster.intersectObjects(scene.children);
             for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object === emailMesh) {
+                if (intersects[i].object === emailGroup) {
                     window.location.href = 'mailto:reononline@gmail.com';
                     break;
                 }
