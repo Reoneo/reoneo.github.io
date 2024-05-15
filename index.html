@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Text Animation</title>
+    <title>Three.js Facebook Icon</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Include GLTFLoader -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <!-- Include FontLoader -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
     <!-- Include TextGeometry -->
@@ -35,7 +33,7 @@
 <body>
     <div id="canvas-wrapper" aria-label="floating"></div>
     <footer>
-        Creative 3D Text Animation
+        Creative 3D Facebook Icon
     </footer>
     <script>
         // JavaScript code for your Three.js animation
@@ -62,100 +60,41 @@
         // Add OrbitControls for camera control
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-        // Load the font and create text
+        // Create the blue square for the background
+        const squareGeometry = new THREE.BoxGeometry(2, 2, 0.1);
+        const squareMaterial = new THREE.MeshStandardMaterial({ color: 0x1877f2 });
+        const square = new THREE.Mesh(squareGeometry, squareMaterial);
+        scene.add(square);
+
+        // Load the font and create the "f" symbol
         const loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-            const geometry = new THREE.TextGeometry('Vape.box', {
+        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', (font) => {
+            const textGeometry = new THREE.TextGeometry('f', {
                 font: font,
                 size: 1,
                 height: 0.2,
                 curveSegments: 12,
                 bevelEnabled: true,
-                bevelThickness: 0.03,
+                bevelThickness: 0.05,
                 bevelSize: 0.02,
                 bevelOffset: 0,
                 bevelSegments: 5
             });
 
-            geometry.computeBoundingBox();
-            geometry.computeVertexNormals();
+            const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
 
-            const material = new THREE.MeshStandardMaterial({ color: 0xff6347, metalness: 0.5, roughness: 0.1 });
-            const textMesh = new THREE.Mesh(geometry, material);
-            
-            // Center the text
-            const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-            textMesh.position.x = centerOffset;
-            textMesh.position.y = 0;
-            textMesh.position.z = 0;
-
-            // Add floating and twisting animation
-            function floatAnimation(time) {
-                textMesh.position.y = Math.sin(time / 1000) * 0.5;
-                textMesh.rotation.z = Math.sin(time / 1000) * 0.1;
-                requestAnimationFrame(floatAnimation);
-            }
-            floatAnimation(0);
-
+            // Position the "f" symbol on top of the blue square
+            textMesh.position.set(-0.35, -0.5, 0.1);
             scene.add(textMesh);
 
-            // Zoom animation with easing
-            let zoomLevel = 25;
-            function zoomAnimation() {
-                if (zoomLevel > 15) {
-                    zoomLevel -= 0.2 * (zoomLevel / 25);
-                    camera.position.z = zoomLevel;
-                    requestAnimationFrame(zoomAnimation);
-                }
-            }
-            zoomAnimation();
-
-            // animation
-            function animate(time) {
-                renderer.render(scene, camera);
-                controls.update();
-            }
-
-            renderer.setAnimationLoop(animate);
-        });
-
-        // Load the email icon (envelope) model
-        const gltfLoader = new THREE.GLTFLoader();
-        gltfLoader.load('path/to/your/email_emoji_model.glb', (gltf) => {
-            const emailIcon = gltf.scene;
-            emailIcon.scale.set(0.5, 0.5, 0.5);
-            emailIcon.position.set(0, -2, 0);
-
-            // Orbit animation for the email icon
+            // Orbit animation for the Facebook icon
             function orbitAnimation(time) {
-                emailIcon.position.x = 2 * Math.cos(time / 1000);
-                emailIcon.position.y = 2 * Math.sin(time / 1000) - 2;
-                emailIcon.rotation.x += 0.01;
-                emailIcon.rotation.y += 0.01;
+                square.rotation.y = time / 2000;
+                textMesh.rotation.y = time / 2000;
                 requestAnimationFrame(orbitAnimation);
             }
             orbitAnimation(0);
-
-            scene.add(emailIcon);
-
-            // Handle clicks for hyperlink
-            renderer.domElement.addEventListener('click', (event) => {
-                const mouse = new THREE.Vector2(
-                    (event.clientX / window.innerWidth) * 2 - 1,
-                    -(event.clientY / window.innerHeight) * 2 + 1
-                );
-
-                const raycaster = new THREE.Raycaster();
-                raycaster.setFromCamera(mouse, camera);
-
-                const intersects = raycaster.intersectObjects(scene.children);
-                for (let i = 0; i < intersects.length; i++) {
-                    if (intersects[i].object === emailIcon) {
-                        window.location.href = 'mailto:reononline@gmail.com';
-                        break;
-                    }
-                }
-            });
         });
 
         // Handle window resize
@@ -189,6 +128,13 @@
         }
         cameraAnimation(0);
 
+        // Render loop
+        function animate() {
+            renderer.render(scene, camera);
+            controls.update();
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
