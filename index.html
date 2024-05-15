@@ -2,14 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>3D Animation with Three.js</title>
+    <title>Video Background</title>
     <style>
-        body { margin: 0; }
-        canvas { display: block; }
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            transform: rotate(180deg); /* Rotate video */
+            background: url('fallback.jpg') no-repeat;
+            background-size: cover;
+        }
+        .content {
+            position: relative;
+            z-index: 100;
+            padding: 20px;
+            height: 100%;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.142.0/build/three.min.js"></script>
-    <script src="app.js"></script>
+
+<div class="video-background">
+    <iframe frameborder="0" height="100%" width="100%"
+        src="https://www.youtube.com/embed/iaE_jvU8u6Q?autoplay=1&controls=0&showinfo=0&autohide=1&loop=1&playlist=iaE_jvU8u6Q&mute=1"
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+</div>
+
+<div class="content">
+    Welcome to Our Website!
+</div>
+
 </body>
 </html>
