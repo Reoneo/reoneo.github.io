@@ -2,91 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vape.Box</title>
-
-    <!-- Open Graph and Twitter Card tags -->
-    <meta property="og:title" content="Vape.Box">
-    <meta property="og:description" content="Over 18s ONLY">
-    <meta property="og:url" content="https://vape.box">
-    <meta property="og:image" content="https://i.imgur.com/ghmaU1x.jpeg">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Vape.Box">
-    <meta name="twitter:description" content="Over 18s ONLY">
-    <meta name="twitter:image" content="https://i.imgur.com/ghmaU1x.jpeg">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Animation</title>
+    <!-- Include Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        /* Existing styles */
-        html, body { overflow-x: hidden; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { text-align: center; background-color: white; }
-        img { display: block; margin: 0 auto; max-width: 100%; height: auto; }
-        .logo, .sample, .contact, .gap, footer { padding: 0; margin: 0; }
-        .contact { margin-top: 10px; display: inline-flex; gap: 10px; }
-        .gap { height: 20px; }
-        footer { padding: 10px 0; text-align: center; background-color: transparent; font-size: 12px; /* Reduced font size */ }
-
-        /* Popup styling */
-        .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background: white; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1001; animation: popupAnim 0.5s ease-out forwards; }
-        @keyframes popupAnim { from { opacity: 0; transform: translate(-50%, -40%); } to { opacity: 1; transform: translate(-50%, -50%); } }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000; /* Set background color */
+            font-family: Arial, sans-serif; /* Set font family */
+        }
+        canvas {
+            display: block;
+        }
+        footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #fff; /* Set footer text color */
+        }
     </style>
 </head>
 <body>
-    <!-- Existing content -->
-    <div class="logo"><img src="https://i.imgur.com/ghmaU1x.jpeg" alt="Logo"></div>
-    <div class="sample"><img src="https://i.imgur.com/kWJUL9C.png" alt="Sample Image"></div>
-    <div class="contact">
-        <!-- Existing icons -->
-        <!-- Contact links and social media icons -->
-    </div>
-    <div class="gap"></div>
-    <div class="new-image"><img src="https://i.imgur.com/f4swShQ.jpeg" alt="New Image"></div>
-    <!-- Contact information with shopping bag, LinkedIn, and Facebook icons -->
-    <div class="contact">
-        <a href="tel:+447783485026">
-            <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone Icon" width="30" height="30">
-        </a>
-        <a href="mailto:reon@vape.box">
-            <img src="https://cdn-icons-png.flaticon.com/512/455/455712.png" alt="Email Icon" width="30" height="30">
-        </a>
-        <a href="https://opensea.io/vape.box">
-            <img src="https://cdn-icons-png.flaticon.com/512/102/102665.png" alt="Shopping Bag Icon" width="30" height="30">
-        </a>
-        <a href="https://www.linkedin.com/in/reon-franklyn-7a5733133">
-            <img src="https://cdn-icons-png.flaticon.com/512/3536/3536569.png" alt="LinkedIn Icon" width="30" height="30">
-        </a>
-        <!-- Facebook icon with hyperlink -->
-        <a href="https://www.facebook.com/groups/the.xrp.army/?ref=share">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384005.png" alt="Facebook Icon" width="30" height="30">
-        </a>
-    </div>
-    <footer>© 2024 Vape.Box. All Rights Reserved</footer>
-
-    <!-- Popup HTML -->
-    <div class="overlay" id="overlay" style="display: block;"></div>
-    <div class="popup" id="popup" style="display: block;">
-        <h2>Are You Over 18?</h2>
-        <button onclick="closePopup()">Yes</button>
-        <button onclick="redirect()">No</button>
-    </div>
-
-    <!-- Popup JavaScript -->
+    <div id="canvas-wrapper" aria-label="floating"></div>
+ 
+    </footer>
     <script>
-        function showPopup() {
-            document.getElementById('popup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-        function redirect() {
-            window.location.href = "https://www.nhs.uk/live-well/quit-smoking/nhs-stop-smoking-services-help-you-quit/";
-        }
-        window.onload = showPopup; // This will load the popup as soon as the window loads
-    </script>
+        // JavaScript code for your Three.js animation
+        const width = window.innerWidth, height = window.innerHeight;
 
+        // init
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 1;
+        
+        const scene = new THREE.Scene();
+        
+        const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+        const material = new THREE.MeshNormalMaterial();
+        
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(width, height);
+        document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+        
+        // animation
+        function animate(time) {
+            mesh.rotation.x = time / 2000;
+            mesh.rotation.y = time / 1000;
+            renderer.render(scene, camera);
+        }
+
+        renderer.setAnimationLoop(animate);
+    </script>
 </body>
 </html>
