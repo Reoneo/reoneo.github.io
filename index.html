@@ -63,7 +63,7 @@
         // Load the font and create text
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-            const geometry = new THREE.TextGeometry('Vape.box', {
+            const geometry = new THREE.TextGeometry('Vape.₿ox', {
                 font: font,
                 size: 1,
                 height: 0.2,
@@ -97,11 +97,11 @@
 
             scene.add(textMesh);
 
-            // Zoom animation
+            // Zoom animation with easing
             let zoomLevel = 15;
             function zoomAnimation() {
-                if (zoomLevel > 5) {
-                    zoomLevel -= 0.1;
+                if (zoomLevel > 7) {
+                    zoomLevel -= 0.2 * (zoomLevel / 15);
                     camera.position.z = zoomLevel;
                     requestAnimationFrame(zoomAnimation);
                 }
@@ -143,12 +143,21 @@
             emailMesh.position.y = -2;
             emailMesh.position.z = 0;
 
-            emailMesh.userData = { URL: 'mailto:inbox@vape.box' };
+            emailMesh.userData = { URL: 'mailto:reononline@gmail.com' };
             emailMesh.cursor = 'pointer';
 
             emailMesh.onClick = function () {
                 window.location.href = emailMesh.userData.URL;
             };
+
+            // Add slow random movement to the email text
+            function randomMovement() {
+                emailMesh.position.x += (Math.random() - 0.5) * 0.01;
+                emailMesh.position.y += (Math.random() - 0.5) * 0.01;
+                emailMesh.position.z += (Math.random() - 0.5) * 0.01;
+                requestAnimationFrame(randomMovement);
+            }
+            randomMovement();
 
             scene.add(emailMesh);
         });
