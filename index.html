@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape.₿ox</title>
+    <title>3D Game with Three.js</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Include GLTFLoader -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <!-- Include OrbitControls -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
@@ -20,29 +18,39 @@
         canvas {
             display: block;
         }
-        .info {
+        .controls {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            color: #fff;
-            z-index: 1;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            background-color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div id="canvas-wrapper" aria-label="floating"></div>
-    <div class="info">
-        <h1>Vape.₿ox</h1>
-        <p>Explore our products in 3D!</p>
+    <div id="canvas-wrapper" aria-label="3d game"></div>
+    <div class="controls">
+        <button class="button" id="left">Left</button>
+        <button class="button" id="right">Right</button>
+        <button class="button" id="up">Up</button>
+        <button class="button" id="down">Down</button>
     </div>
     <script>
-        // JavaScript code for your Three.js animation
+        // JavaScript code for the 3D game with Three.js
         const width = window.innerWidth, height = window.innerHeight;
 
         // Initialize scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        camera.position.z = 10;
+        camera.position.z = 5;
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
@@ -51,43 +59,11 @@
         // Add OrbitControls
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-        // Add ambient and point lights
-        const ambientLight = new THREE.AmbientLight(0x404040, 2);
-        scene.add(ambientLight);
-
-        const pointLight = new THREE.PointLight(0xffffff, 1);
-        pointLight.position.set(10, 10, 10);
-        scene.add(pointLight);
-
-        // Load 3D models using GLTFLoader
-        const loader = new THREE.GLTFLoader();
-        
-        // Function to load and add a 3D model
-        function loadModel(url, position) {
-            loader.load(url, (gltf) => {
-                const model = gltf.scene;
-                model.position.set(position.x, position.y, position.z);
-                scene.add(model);
-            });
-        }
-
-        // Load example models (replace URLs with actual model paths)
-        loadModel('path/to/your/logo/model.glb', { x: 0, y: 0, z: 0 });
-        loadModel('path/to/product1/model.glb', { x: -5, y: 0, z: -5 });
-        loadModel('path/to/product2/model.glb', { x: 5, y: 0, z: -5 });
-
-        // Add stars for background
-        function addStar() {
-            const starGeometry = new THREE.SphereGeometry(0.1, 24, 24);
-            const starMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-            const star = new THREE.Mesh(starGeometry, starMaterial);
-
-            const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(200));
-            star.position.set(x, y, z);
-            scene.add(star);
-        }
-
-        Array(200).fill().forEach(addStar);
+        // Add a cube to the scene
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
 
         // Resize handler
         window.addEventListener('resize', () => {
@@ -96,6 +72,23 @@
             renderer.setSize(width, height);
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
+        });
+
+        // Handle button clicks to move the cube
+        document.getElementById('left').addEventListener('click', () => {
+            cube.position.x -= 0.1;
+        });
+
+        document.getElementById('right').addEventListener('click', () => {
+            cube.position.x += 0.1;
+        });
+
+        document.getElementById('up').addEventListener('click', () => {
+            cube.position.y += 0.1;
+        });
+
+        document.getElementById('down').addEventListener('click', () => {
+            cube.position.y -= 0.1;
         });
 
         // Animate function
