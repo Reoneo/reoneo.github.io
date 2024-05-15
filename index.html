@@ -1,46 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Full Screen Video Background</title>
-    <style>
-        * { margin: 0; padding: 0; }
-        body, html { height: 100%; }
-        .video-background {
-            position: fixed;
-            right: 0; top: 0; bottom: 0; left: 0;
-            overflow: hidden;
-            background: #000; /* Default background to enhance loading */
-        }
-        .video-background iframe {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            min-width: 100vw; 
-            min-height: 100vh;
-            width: auto;
-            height: auto;
-            z-index: -1000;
-            background-size: cover;
-        }
-        .content {
-            position: relative;
-            z-index: 10;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 2rem;
-        }
-    </style>
-</head>
-<body>
-<div class="video-background">
-    <iframe src="https://www.youtube.com/embed/iaE_jvU8u6Q?autoplay=1&controls=0&showinfo=0&autohide=1&loop=1&playlist=iaE_jvU8u6Q&mute=1&modestbranding=1&rel=0&iv_load_policy=3"
-        frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-</div>
-<div class="content">
-</div>
-</body>
-</html>
+import * as THREE from 'three';
+
+const width = window.innerWidth, height = window.innerHeight;
+
+// init
+
+const camera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
+camera.position.z = 1;
+
+const scene = new THREE.Scene();
+
+const geometry = new THREE.BoxGeometry( 0.2, 0.2, 0.2 );
+const material = new THREE.MeshNormalMaterial();
+
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
+
+const renderer = new THREE.WebGLRenderer( { antialias: true } );
+renderer.setSize( width, height );
+renderer.setAnimationLoop( animate );
+document.body.appendChild( renderer.domElement );
+
+// animation
+
+function animate( time ) {
+
+	mesh.rotation.x = time / 2000;
+	mesh.rotation.y = time / 1000;
+
+	renderer.render( scene, camera );
+
+}
