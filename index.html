@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Logo Cubes</title>
+    <title>Three.js Facebook Icon Cube</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <!-- Include FontLoader -->
@@ -98,79 +98,90 @@
             scene.add(textMesh);
         });
 
-        // Function to create logo textures
-        function createLogoTexture(color, logo, fontSize = '300px') {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 512;
-            const context = canvas.getContext('2d');
-            context.fillStyle = color;
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            context.font = `bold ${fontSize} Arial`;
-            context.fillStyle = '#ffffff';
-            context.fillText(logo, 130, 350);
-            return new THREE.CanvasTexture(canvas);
-        }
+        // Create the cube with the Facebook logo on each side
+        const cubeSize = 2;
+        const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+        const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x1877f2 });
 
-        // Function to create and position cubes
-        function createLogoCube(position, logo, color) {
-            const texture = createLogoTexture(color, logo);
-            const materials = Array(6).fill(new THREE.MeshBasicMaterial({ map: texture }));
-            const geometry = new THREE.BoxGeometry(2, 2, 2);
-            const cube = new THREE.Mesh(geometry, materials);
+        const faceGeometries = [];
+        const faceMaterials = [];
+        const textLoader = new THREE.FontLoader();
 
-            cube.position.set(position.x, position.y, position.z);
-            scene.add(cube);
+        textLoader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', (font) => {
+            for (let i = 0; i < 6; i++) {
+                const faceGeometry = new THREE.PlaneGeometry(cubeSize, cubeSize);
+                const textGeometry = new THREE.TextGeometry('f', {
+                    font: font,
+                    size: 1,
+                    height: 0.1,
+                    curveSegments: 12,
+                    bevelEnabled: true,
+                    bevelThickness: 0.03,
+                    bevelSize: 0.02,
+                    bevelOffset: 0,
+                    bevelSegments: 5
+                });
 
-            function rotateCube() {
+                const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+                const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+                // Position the "f" symbol on the plane
+                textMesh.position.set(-0.25, -0.5, 0.1);
+
+                const face = new THREE.Mesh(faceGeometry, cubeMaterial);
+                face.add(textMesh);
+
+                const canvas = document.createElement('canvas');
+                canvas.width = 512;
+                canvas.height = 512;
+                const context = canvas.getContext('2d');
+                context.fillStyle = '#1877f2';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.font = 'bold 300px Arial';
+                context.fillStyle = '#ffffff';
+                context.fillText('f', 130, 350);
+
+                const texture = new THREE.CanvasTexture(canvas);
+                const material = new THREE.MeshBasicMaterial({ map: texture });
+                faceGeometries.push(faceGeometry);
+                faceMaterials.push(material);
+            }
+
+            const cube = new THREE.Mesh(cubeGeometry, faceMaterials);
+
+            // Position the cube
+            cube.position.set(0, -2, 0);
+
+            // Add rotation animation
+            function rotateCube(time) {
                 cube.rotation.x += 0.01;
                 cube.rotation.y += 0.01;
                 requestAnimationFrame(rotateCube);
             }
-            rotateCube();
+            rotateCube(0);
 
-            return cube;
-        }
+            // Add the cube to the scene
+            scene.add(cube);
 
-        // Create logo cubes with specific positions
-        const facebookCube = createLogoCube({ x: -5, y: 0, z: -10 }, 'f', '#1877f2');
-        const linkedInCube = createLogoCube({ x: 5, y: 0, z: -10 }, 'in', '#0e76a8');
-        const twitterCube = createLogoCube({ x: -5, y: -5, z: -15 }, 'X', '#1da1f2');
-        const instagramCube = createLogoCube({ x: 5, y: -5, z: -15 }, '♛', '#E1306C'); // Unicode for Instagram crown symbol
-        const ethereumCube = createLogoCube({ x: -5, y: 5, z: -20 }, 'ETH', '#3c3c3d');
-        const xrpCube = createLogoCube({ x: 5, y: 5, z: -20 }, 'XRP', '#25a768');
+            // Make the cube a hyperlink
+            renderer.domElement.addEventListener('click', (event) => {
+                const mouse = new THREE.Vector2(
+                    (event.clientX / window.innerWidth) * 2 - 1,
+                    -(event.clientY / window.innerHeight) * 2 + 1
+                );
 
-        // Function to handle click and touch events
-        function handleInteraction(event) {
-            let x, y;
-            if (event.type === 'touchstart') {
-                x = event.touches[0].clientX;
-                y = event.touches[0].clientY;
-            } else {
-                x = event.clientX;
-                y = event.clientY;
-            }
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, camera);
 
-            const mouse = new THREE.Vector2(
-                (x / window.innerWidth) * 2 - 1,
-                -(y / window.innerHeight) * 2 + 1
-            );
-
-            const raycaster = new THREE.Raycaster();
-            raycaster.setFromCamera(mouse, camera);
-
-            const intersects = raycaster.intersectObjects(scene.children);
-            for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object === facebookCube || intersects[i].object === linkedInCube || intersects[i].object === twitterCube || intersects[i].object === instagramCube || intersects[i].object === ethereumCube || intersects[i].object === xrpCube) {
-                    window.location.href = 'mailto:reononline@gmail.com';
-                    break;
+                const intersects = raycaster.intersectObjects(scene.children);
+                for (let i = 0; i < intersects.length; i++) {
+                    if (intersects[i].object === cube) {
+                        window.location.href = 'mailto:reononline@gmail.com';
+                        break;
+                    }
                 }
-            }
-        }
-
-        // Add event listeners for both click and touch events
-        renderer.domElement.addEventListener('click', handleInteraction);
-        renderer.domElement.addEventListener('touchstart', handleInteraction);
+            });
+        });
 
         // Handle window resize
         window.addEventListener('resize', () => {
