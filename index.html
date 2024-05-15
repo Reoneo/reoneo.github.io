@@ -10,6 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
     <!-- Include TextGeometry -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
+    <!-- Include OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
@@ -31,7 +33,7 @@
 <body>
     <div id="canvas-wrapper" aria-label="floating"></div>
     <footer>
-        Vape.₿ox
+        Creative 3D Text Animation
     </footer>
     <script>
         // JavaScript code for your Three.js animation
@@ -55,9 +57,12 @@
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
+        // Add OrbitControls for camera control
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
         // Load the font and create text
         const loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+        loader.load('https://threejs.org/examples/fonts/droid/droid_sans_regular.typeface.json', (font) => {
             const geometry = new THREE.TextGeometry('Vape.₿ox', {
                 font: font,
                 size: 1,
@@ -79,16 +84,22 @@
             // Center the text
             const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
             textMesh.position.x = centerOffset;
-            textMesh.position.y = -0.5;
+            textMesh.position.y = 0;
             textMesh.position.z = 0;
+
+            // Add floating animation
+            function floatAnimation() {
+                textMesh.position.y = Math.sin(Date.now() * 0.001) * 0.5;
+                requestAnimationFrame(floatAnimation);
+            }
+            floatAnimation();
 
             scene.add(textMesh);
 
             // animation
-            function animate(time) {
-                textMesh.rotation.x = time / 2000;
-                textMesh.rotation.y = time / 1000;
+            function animate() {
                 renderer.render(scene, camera);
+                controls.update();
             }
 
             renderer.setAnimationLoop(animate);
