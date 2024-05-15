@@ -3,145 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Scene with Three.js</title>
+    <title>Vape.₿ox</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Include FontLoader and TextGeometry -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #00FFFF; /* Cyan background */
-            font-family: Arial, sans-serif;
+            background-color: #000; /* Set background color */
+            font-family: Arial, sans-serif; /* Set font family */
         }
         canvas {
             display: block;
         }
+        footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #fff; /* Set footer text color */
+        }
     </style>
 </head>
 <body>
+    <div id="canvas-wrapper" aria-label="floating"></div>
+ 
+    </footer>
     <script>
-        // Basic Three.js setup
+        // JavaScript code for your Three.js animation
+        const width = window.innerWidth, height = window.innerHeight;
+
+        // init
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 1;
+        
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+        const material = new THREE.MeshNormalMaterial();
+        
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // Add ambient light
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-        scene.add(ambientLight);
-
-        // Create the 3D text object
-        const loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function(font) {
-            const textGeometry = new THREE.TextGeometry('Vape.box', {
-                font: font,
-                size: 1,
-                height: 0.5,
-                curveSegments: 12,
-                bevelEnabled: true,
-                bevelThickness: 0.1,
-                bevelSize: 0.05,
-                bevelOffset: 0,
-                bevelSegments: 5
-            });
-            const textMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.position.set(-2.5, 0, 0);
-            scene.add(textMesh);
-        });
-
-        // Create cubes
-        const createCube = (color1, color2) => {
-            const materials = [
-                new THREE.MeshBasicMaterial({ color: color1 }),
-                new THREE.MeshBasicMaterial({ color: color1 }),
-                new THREE.MeshBasicMaterial({ color: color1 }),
-                new THREE.MeshBasicMaterial({ color: color1 }),
-                new THREE.MeshBasicMaterial({ color: color2 }),
-                new THREE.MeshBasicMaterial({ color: color2 })
-            ];
-            const geometry = new THREE.BoxGeometry();
-            return new THREE.Mesh(geometry, materials);
-        };
-
-        // Position cubes
-        for (let i = 0; i < 25; i++) {
-            const cube = createCube(0xffa500, 0x808080);
-            cube.position.set(Math.random() * 20 - 10, Math.random() * 10 - 5, Math.random() * 20 - 10);
-            scene.add(cube);
-        }
-        for (let i = 0; i < 25; i++) {
-            const cube = createCube(0x800080, 0xff0000);
-            cube.position.set(Math.random() * 20 - 10, Math.random() * 10 - 5, Math.random() * 20 - 10);
-            scene.add(cube);
-        }
-
-        // Camera animation
-        let zoomLevel = 50;
-        function zoomIn() {
-            if (zoomLevel > 5) {
-                zoomLevel -= 0.5;
-                camera.position.z = zoomLevel;
-                camera.rotation.y += 0.01;
-                requestAnimationFrame(zoomIn);
-            }
-        }
-        zoomIn();
-
-        // Handle swipe events
-        let startX, startY, endX, endY;
-        document.addEventListener('touchstart', (event) => {
-            startX = event.touches[0].clientX;
-            startY = event.touches[0].clientY;
-        });
-
-        document.addEventListener('touchend', (event) => {
-            endX = event.changedTouches[0].clientX;
-            endY = event.changedTouches[0].clientY;
-            handleSwipe();
-        });
-
-        function handleSwipe() {
-            const deltaX = endX - startX;
-            const deltaY = endY - startY;
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (deltaX > 0) {
-                    // Swipe right
-                    camera.rotation.y -= Math.PI / 8;
-                } else {
-                    // Swipe left
-                    camera.rotation.y += Math.PI / 8;
-                }
-            } else {
-                if (deltaY > 0) {
-                    // Swipe down
-                    camera.rotation.x -= Math.PI / 8;
-                } else {
-                    // Swipe up
-                    camera.rotation.x += Math.PI / 8;
-                }
-            }
-        }
-
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
+        renderer.setSize(width, height);
+        document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+        
+        // animation
+        function animate(time) {
+            mesh.rotation.x = time / 2000;
+            mesh.rotation.y = time / 1000;
             renderer.render(scene, camera);
         }
-        animate();
 
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            renderer.setSize(width, height);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-        });
+        renderer.setAnimationLoop(animate);
     </script>
 </body>
 </html>
