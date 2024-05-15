@@ -6,11 +6,13 @@
     <title>Vape.₿ox</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #000; /* Set background color */
+            background-color: #fff; /* Set background color to white */
             font-family: Arial, sans-serif; /* Set font family */
         }
         canvas {
@@ -20,14 +22,16 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
-            color: #fff; /* Set footer text color */
+            color: #000; /* Set footer text color to black */
+        }
+        #footer-text {
+            font-size: 11px; /* Set font size */
         }
     </style>
 </head>
 <body>
     <div id="canvas-wrapper" aria-label="floating"></div>
- 
-    </footer>
+    <footer id="footer-text">Vape.₿ox</footer>
     <script>
         // JavaScript code for your Three.js animation
         const width = window.innerWidth, height = window.innerHeight;
@@ -47,15 +51,30 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+
+        // OrbitControls for camera movement
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Enable damping for smoother motion
+        controls.dampingFactor = 0.05;
         
         // animation
         function animate(time) {
             mesh.rotation.x = time / 2000;
             mesh.rotation.y = time / 1000;
+            controls.update();
             renderer.render(scene, camera);
         }
 
         renderer.setAnimationLoop(animate);
+        
+        // Resize handling
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
     </script>
 </body>
 </html>
