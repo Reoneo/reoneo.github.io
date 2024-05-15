@@ -2,51 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Video Background</title>
+    <title>Full Screen Video Background</title>
     <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            overflow: hidden;
-        }
+        * { margin: 0; padding: 0; }
+        body, html { height: 100%; }
         .video-background {
             position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
+            right: 0; top: 0; bottom: 0; left: 0;
+            overflow: hidden;
+            background: #000; /* Default background to enhance loading */
+        }
+        .video-background iframe {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100vw; 
+            min-height: 100vh;
             width: auto;
             height: auto;
-            z-index: -100;
-            transform: rotate(180deg); /* Rotate video */
-            background: url('fallback.jpg') no-repeat;
+            z-index: -1000;
             background-size: cover;
         }
         .content {
             position: relative;
-            z-index: 100;
-            padding: 20px;
+            z-index: 10;
             height: 100%;
-            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            color: white;
+            font-size: 2rem;
         }
     </style>
 </head>
 <body>
-
 <div class="video-background">
-    <iframe frameborder="0" height="100%" width="100%"
-        src="https://www.youtube.com/embed/iaE_jvU8u6Q?autoplay=1&controls=0&showinfo=0&autohide=1&loop=1&playlist=iaE_jvU8u6Q&mute=1"
-        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-    </iframe>
+    <iframe src="https://www.youtube.com/embed/iaE_jvU8u6Q?autoplay=1&controls=0&showinfo=0&autohide=1&loop=1&playlist=iaE_jvU8u6Q&mute=1&modestbranding=1&rel=0&iv_load_policy=3"
+        frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
 </div>
-
 <div class="content">
-    Welcome to Our Website!
 </div>
-
 </body>
 </html>
