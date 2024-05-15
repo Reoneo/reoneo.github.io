@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Creative Animation</title>
+    <title>Three.js Text Animation</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include FontLoader -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+    <!-- Include TextGeometry -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
@@ -27,7 +31,7 @@
 <body>
     <div id="canvas-wrapper" aria-label="floating"></div>
     <footer>
-        Creative 3D Animation
+        Creative 3D Text Animation
     </footer>
     <script>
         // JavaScript code for your Three.js animation
@@ -38,12 +42,6 @@
         camera.position.z = 5;
 
         const scene = new THREE.Scene();
-
-        // Create a torus knot geometry
-        const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
-        const material = new THREE.MeshStandardMaterial({ color: 0xff6347, metalness: 0.5, roughness: 0.1 });
-        const torusKnot = new THREE.Mesh(geometry, material);
-        scene.add(torusKnot);
 
         // Add lights
         const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft white light
@@ -56,6 +54,31 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+
+        // Load the font and create text
+        const loader = new THREE.FontLoader();
+        loader.load('path/to/helvetiker_regular.typeface.json', (font) => {
+            const geometry = new THREE.TextGeometry('Vape.₿ox', {
+                font: font,
+                size: 1,
+                height: 0.2,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 0.03,
+                bevelSize: 0.02,
+                bevelOffset: 0,
+                bevelSegments: 5
+            });
+
+            const material = new THREE.MeshStandardMaterial({ color: 0xff6347, metalness: 0.5, roughness: 0.1 });
+            const textMesh = new THREE.Mesh(geometry, material);
+            scene.add(textMesh);
+            
+            // Center the text
+            geometry.computeBoundingBox();
+            const centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+            textMesh.position.x = centerOffset;
+        });
 
         // Add stars
         function addStar() {
@@ -72,8 +95,6 @@
 
         // animation
         function animate(time) {
-            torusKnot.rotation.x = time / 2000;
-            torusKnot.rotation.y = time / 1000;
             renderer.render(scene, camera);
         }
 
