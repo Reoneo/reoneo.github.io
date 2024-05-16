@@ -40,9 +40,9 @@
     <script>
         const width = window.innerWidth, height = window.innerHeight;
 
-        // init
+        // Init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 5; // Start further back to allow for zooming in
+        camera.position.z = 5; // Start further back for the zoom effect
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
@@ -51,22 +51,30 @@
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft ambient light
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xffffff, 1);
+        pointLight.position.set(2, 2, 2);
+        scene.add(pointLight);
+
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
             const textGeometry = new THREE.TextGeometry('Vape.Box', {
                 font: font,
-                size: 0.2,
-                height: 0.05,
+                size: 0.5,
+                height: 0.2,
                 curveSegments: 12,
                 bevelEnabled: true,
-                bevelThickness: 0.02,
-                bevelSize: 0.01,
+                bevelThickness: 0.03,
+                bevelSize: 0.02,
                 bevelOffset: 0,
                 bevelSegments: 5
             });
 
-            const textMaterial = new THREE.MeshNormalMaterial();
+            const textMaterial = new THREE.MeshStandardMaterial({ color: 0x0077ff });
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textGeometry.center(); // Center the text
             scene.add(textMesh);
@@ -97,7 +105,7 @@
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .start();
 
-            // animation
+            // Animation loop
             function animate(time) {
                 TWEEN.update(time);
                 
@@ -107,8 +115,8 @@
                 camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
                 camera.lookAt(textMesh.position);
 
-                textMesh.rotation.x = time / 2000;
-                textMesh.rotation.y = time / 1000;
+                textMesh.rotation.x = time / 4000;
+                textMesh.rotation.y = time / 2000;
 
                 renderer.render(scene, camera);
             }
