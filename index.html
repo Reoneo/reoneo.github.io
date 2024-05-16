@@ -6,12 +6,12 @@
     <title>Vape.₿ox</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Include Three.js OrbitControls library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+    <!-- Include OrbitControls library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
@@ -51,12 +51,11 @@
 
         // Add OrbitControls
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Enable damping (inertia)
-        controls.dampingFactor = 0.25; // Damping factor
-        controls.screenSpacePanning = false; // Don't allow panning (moving the whole scene)
-        controls.minDistance = 1; // Set minimum zoom distance
-        controls.maxDistance = 5; // Set maximum zoom distance
-        controls.maxPolarAngle = Math.PI / 2; // Limit vertical angle
+        controls.enableDamping = true; // Enable smooth damping
+        controls.dampingFactor = 0.25;
+        controls.screenSpacePanning = false;
+        controls.minDistance = 0.5; // Set minimum zoom distance
+        controls.maxDistance = 3; // Set maximum zoom distance
 
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
@@ -78,38 +77,17 @@
             textGeometry.center(); // Center the text
             scene.add(textMesh);
 
-            // Create 50 cubes scattered randomly around the main text
-            const cubeGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-            const cubeMaterial = new THREE.MeshNormalMaterial();
-
-            for (let i = 0; i < 50; i++) {
-                const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
-                cubeMesh.position.set(
-                    (Math.random() - 0.5) * 5,
-                    (Math.random() - 0.5) * 5,
-                    (Math.random() - 0.5) * 5
-                );
-                scene.add(cubeMesh);
-            }
-
             // animation
             function animate(time) {
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
 
-                controls.update();
+                controls.update(); // Update controls
+
                 renderer.render(scene, camera);
             }
 
             renderer.setAnimationLoop(animate);
-        });
-
-        window.addEventListener('resize', () => {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            renderer.setSize(width, height);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
         });
     </script>
 </body>
