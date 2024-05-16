@@ -53,15 +53,15 @@
                 font: font,
                 size: 0.2,
                 height: 0.05,
-                curveSegments: 12,
+                curveSegments: 32, // Increase curve segments for smoother text
                 bevelEnabled: true,
-                bevelThickness: 0.02,
-                bevelSize: 0.01,
+                bevelThickness: 0.03,
+                bevelSize: 0.02,
                 bevelOffset: 0,
-                bevelSegments: 5
+                bevelSegments: 8
             });
 
-            const textMaterial = new THREE.MeshNormalMaterial();
+            const textMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 }); // Use Phong material for better lighting
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textGeometry.center(); // Center the text
 
@@ -69,6 +69,14 @@
             textMesh.rotation.x = Math.PI / 6;
             textMesh.rotation.y = Math.PI / 4;
             scene.add(textMesh);
+
+            // Add lights to improve the text appearance
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xffffff, 0.5);
+            camera.add(pointLight);
+            scene.add(camera);
 
             let isUserInteracting = false,
                 onPointerDownPointerX = 0, onPointerDownPointerY = 0,
