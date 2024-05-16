@@ -9,7 +9,94 @@
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
+    <script<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vape.₿ox</title>
+    <!-- Include Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include Three.js FontLoader library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
+    <!-- Include Three.js TextGeometry library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #fff; /* Set background color */
+            font-family: Arial, sans-serif; /* Set font family */
+        }
+        canvas {
+            display: block;
+        }
+        footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 12px;
+            color: #000; /* Set footer text color to black */
+            z-index: 10; /* Ensure footer appears above everything */
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-wrapper" aria-label="floating"></div>
+    <footer>Vape.₿ox</footer>
+    <script>
+        const width = window.innerWidth, height = window.innerHeight;
+
+        // init
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 2; // Start further back to allow for zooming in
+        
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff); // Set background to white
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(width, height);
+        document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+
+        // Load the font and create text geometry
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+            const textGeometry = new THREE.TextGeometry('Vape.Box', {
+                font: font,
+                size: 0.2,
+                height: 0.05,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 0.02,
+                bevelSize: 0.01,
+                bevelOffset: 0,
+                bevelSegments: 5
+            });
+
+            const textMaterial = new THREE.MeshNormalMaterial();
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textGeometry.center(); // Center the text
+            scene.add(textMesh);
+
+            // animation
+            function animate(time) {
+                textMesh.rotation.x = time / 2000;
+                textMesh.rotation.y = time / 1000;
+
+                // Create a cool moving effect for the camera
+                camera.position.x = Math.sin(time / 2000) * 1.5;
+                camera.position.y = Math.sin(time / 1000) * 0.5;
+                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                camera.lookAt(textMesh.position);
+                
+                renderer.render(scene, camera);
+            }
+
+            renderer.setAnimationLoop(animate);
+        });
+    </script>
+</body>
+</html> src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
