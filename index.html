@@ -49,7 +49,7 @@
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textGeometry = new THREE.TextGeometry('Vape.Box', {
+            const textGeometry = new THREE.TextGeometry('Vape.₿ox', {
                 font: font,
                 size: 0.2,
                 height: 0.05,
@@ -65,9 +65,9 @@
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textGeometry.center(); // Center the text
 
-            // Set initial rotation for the text
-            textMesh.rotation.x = Math.PI / 4;
-            textMesh.rotation.y = Math.PI / 6;
+            // Set initial rotation for the text to make it visible
+            textMesh.rotation.x = Math.PI / 6;
+            textMesh.rotation.y = Math.PI / 4;
             scene.add(textMesh);
 
             let isUserInteracting = false,
