@@ -9,18 +9,11 @@
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
-    <script<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape.₿ox</title>
-    <!-- Include Three.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Include Three.js FontLoader library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
-    <!-- Include Three.js TextGeometry library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+    <!-- Include TWEEN.js library for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    <!-- Include Hammer.js library for swipe functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -49,8 +42,8 @@
 
         // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
-        
+        camera.position.z = 5; // Start further back to allow for zooming in
+
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
 
@@ -78,98 +71,45 @@
             textGeometry.center(); // Center the text
             scene.add(textMesh);
 
+            // Swipe functionality using Hammer.js
+            const hammer = new Hammer(renderer.domElement);
+            hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+
+            hammer.on('swipeleft', () => {
+                textMesh.rotation.y += Math.PI / 4;
+            });
+
+            hammer.on('swiperight', () => {
+                textMesh.rotation.y -= Math.PI / 4;
+            });
+
+            hammer.on('swipeup', () => {
+                textMesh.rotation.x -= Math.PI / 4;
+            });
+
+            hammer.on('swipedown', () => {
+                textMesh.rotation.x += Math.PI / 4;
+            });
+
+            // Zoom animation using TWEEN.js
+            new TWEEN.Tween(camera.position)
+                .to({ z: 1.5 }, 2000) // Zoom in to z = 1.5 over 2 seconds
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .start();
+
             // animation
             function animate(time) {
+                TWEEN.update(time);
+                
+                // Create a cool moving effect for the camera
+                camera.position.x = Math.sin(time / 2000) * 1.5;
+                camera.position.y = Math.sin(time / 1000) * 0.5;
+                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                camera.lookAt(textMesh.position);
+
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
 
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
-                camera.lookAt(textMesh.position);
-                
-                renderer.render(scene, camera);
-            }
-
-            renderer.setAnimationLoop(animate);
-        });
-    </script>
-</body>
-</html> src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #000; /* Set background color to black */
-            font-family: Arial, sans-serif;
-            color: #fff; /* Set default text color to white */
-        }
-        canvas {
-            display: block;
-        }
-        footer {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 12px;
-            z-index: 10;
-        }
-    </style>
-</head>
-<body>
-    <div id="canvas-wrapper" aria-label="floating"></div>
-    <footer>Vape.₿ox</footer>
-    <script>
-        const width = window.innerWidth, height = window.innerHeight;
-
-        // init
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 1.5; // Adjusted zoom level for better view
-
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x000000); // Set background to black
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(width, height);
-        document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
-
-        // Load the font and create text geometry
-        const loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textGeometry = new THREE.TextGeometry('Vape.₿ox', {
-                font: font,
-                size: 0.4, // Increased size for better visibility
-                height: 0.1,
-                curveSegments: 12,
-                bevelEnabled: true,
-                bevelThickness: 0.03,
-                bevelSize: 0.02,
-                bevelOffset: 0,
-                bevelSegments: 5
-            });
-
-            const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700 }); // Gold color for the text
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textGeometry.center(); // Center the text
-            scene.add(textMesh);
-
-            // Add a point light for better text illumination
-            const pointLight = new THREE.PointLight(0xffffff, 1);
-            pointLight.position.set(2, 2, 2);
-            scene.add(pointLight);
-
-            // Animation
-            function animate(time) {
-                textMesh.rotation.x = time / 4000; // Slower rotation
-                textMesh.rotation.y = time / 2000; // Slower rotation
-
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
-                camera.lookAt(textMesh.position);
-                
                 renderer.render(scene, camera);
             }
 
