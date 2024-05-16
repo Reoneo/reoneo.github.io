@@ -37,7 +37,7 @@
 
         // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2.5; // Adjust initial camera position
+        camera.position.z = 5; // Start further back for zoom-in effect
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
@@ -49,7 +49,7 @@
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textGeometry = new THREE.TextGeometry('Vape.Box', {
+            const textGeometry = new THREE.TextGeometry('Vape.₿ox', {
                 font: font,
                 size: 0.2,
                 height: 0.05,
@@ -73,7 +73,8 @@
             let isUserInteracting = false,
                 onPointerDownPointerX = 0, onPointerDownPointerY = 0,
                 lon = 0, onPointerDownLon = 0,
-                lat = 0, onPointerDownLat = 0;
+                lat = 0, onPointerDownLat = 0,
+                zoomInProgress = true;
 
             // Add event listeners for mouse
             document.addEventListener('mousedown', onPointerDown, false);
@@ -137,10 +138,18 @@
                 const phi = THREE.MathUtils.degToRad(90 - lat);
                 const theta = THREE.MathUtils.degToRad(lon);
 
+                // Zoom-in effect
+                if (zoomInProgress) {
+                    camera.position.z -= 0.02; // Adjust zoom speed
+                    if (camera.position.z <= 2.5) { // Stop zooming when camera is close enough
+                        zoomInProgress = false;
+                    }
+                }
+
                 // Floating effect for the camera
                 camera.position.x = 2 * Math.sin(phi) * Math.cos(theta);
                 camera.position.y = 2 * Math.cos(phi) + Math.sin(time / 1000) * 0.5;
-                camera.position.z = 2 * Math.sin(phi) * Math.sin(theta);
+                camera.position.z = Math.max(2.5, 2 * Math.sin(phi) * Math.sin(theta));
                 camera.lookAt(scene.position);
 
                 // Slow twist and tilt for the text
