@@ -9,7 +9,6 @@
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
@@ -38,8 +37,8 @@
 
         // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
-        
+        camera.position.z = 2.5; // Adjust initial camera position
+
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
 
@@ -67,21 +66,96 @@
             textGeometry.center(); // Center the text
             scene.add(textMesh);
 
-            // animation
+            let isUserInteracting = false,
+                onPointerDownPointerX = 0, onPointerDownPointerY = 0,
+                lon = 0, onPointerDownLon = 0,
+                lat = 0, onPointerDownLat = 0;
+
+            // Add event listeners for mouse
+            document.addEventListener('mousedown', onPointerDown, false);
+            document.addEventListener('mousemove', onPointerMove, false);
+            document.addEventListener('mouseup', onPointerUp, false);
+
+            // Add event listeners for touch
+            document.addEventListener('touchstart', onTouchStart, false);
+            document.addEventListener('touchmove', onTouchMove, false);
+
+            function onPointerDown(event) {
+                isUserInteracting = true;
+
+                onPointerDownPointerX = event.clientX;
+                onPointerDownPointerY = event.clientY;
+
+                onPointerDownLon = lon;
+                onPointerDownLat = lat;
+            }
+
+            function onPointerMove(event) {
+                if (isUserInteracting) {
+                    lon = (event.clientX - onPointerDownPointerX) * 0.1 + onPointerDownLon;
+                    lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+                }
+            }
+
+            function onPointerUp() {
+                isUserInteracting = false;
+            }
+
+            function onTouchStart(event) {
+                if (event.touches.length == 1) {
+                    event.preventDefault();
+
+                    isUserInteracting = true;
+
+                    onPointerDownPointerX = event.touches[0].pageX;
+                    onPointerDownPointerY = event.touches[0].pageY;
+
+                    onPointerDownLon = lon;
+                    onPointerDownLat = lat;
+                }
+            }
+
+            function onTouchMove(event) {
+                if (event.touches.length == 1) {
+                    event.preventDefault();
+
+                    lon = (event.touches[0].pageX - onPointerDownPointerX) * 0.1 + onPointerDownLon;
+                    lat = (event.touches[0].pageY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+                }
+            }
+
             function animate(time) {
+                if (!isUserInteracting) {
+                    lon += 0.1; // Auto-rotate when not interacting
+                }
+
+                lat = Math.max(-85, Math.min(85, lat));
+                const phi = THREE.MathUtils.degToRad(90 - lat);
+                const theta = THREE.MathUtils.degToRad(lon);
+
+                camera.position.x = 2 * Math.sin(phi) * Math.cos(theta);
+                camera.position.y = 2 * Math.cos(phi);
+                camera.position.z = 2 * Math.sin(phi) * Math.sin(theta);
+                camera.lookAt(scene.position);
+
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
 
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
-                camera.lookAt(textMesh.position);
-                
                 renderer.render(scene, camera);
             }
 
             renderer.setAnimationLoop(animate);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(width, height);
         });
     </script>
 </body>
