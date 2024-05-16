@@ -49,7 +49,7 @@
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textGeometry = new THREE.TextGeometry('Vape.₿ox', {
+            const textGeometry = new THREE.TextGeometry('Vape.Box', {
                 font: font,
                 size: 0.2,
                 height: 0.05,
@@ -61,7 +61,7 @@
                 bevelSegments: 8
             });
 
-            const textMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 }); // Use Phong material for better lighting
+            const textMaterial = new THREE.MeshNormalMaterial(); // Revert to MeshNormalMaterial
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textGeometry.center(); // Center the text
 
@@ -69,14 +69,6 @@
             textMesh.rotation.x = Math.PI / 6;
             textMesh.rotation.y = Math.PI / 4;
             scene.add(textMesh);
-
-            // Add lights to improve the text appearance
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-
-            const pointLight = new THREE.PointLight(0xffffff, 0.5);
-            camera.add(pointLight);
-            scene.add(camera);
 
             let isUserInteracting = false,
                 onPointerDownPointerX = 0, onPointerDownPointerY = 0,
