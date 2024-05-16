@@ -9,7 +9,6 @@
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
@@ -38,7 +37,7 @@
 
         // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
+        camera.position.z = 3; // Start further back to allow for zooming in
         
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
@@ -75,7 +74,7 @@
                 // Create a cool moving effect for the camera
                 camera.position.x = Math.sin(time / 2000) * 1.5;
                 camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                camera.position.z = 2 + Math.sin(time / 3000) * 0.5; // Adjusted zoom in and out
                 camera.lookAt(textMesh.position);
                 
                 renderer.render(scene, camera);
