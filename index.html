@@ -6,6 +6,8 @@
     <title>Vape.₿ox</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include Three.js OrbitControls library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
@@ -47,6 +49,15 @@
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
+        // Add OrbitControls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Enable damping (inertia)
+        controls.dampingFactor = 0.25; // Damping factor
+        controls.screenSpacePanning = false; // Don't allow panning (moving the whole scene)
+        controls.minDistance = 1; // Set minimum zoom distance
+        controls.maxDistance = 5; // Set maximum zoom distance
+        controls.maxPolarAngle = Math.PI / 2; // Limit vertical angle
+
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
@@ -67,17 +78,26 @@
             textGeometry.center(); // Center the text
             scene.add(textMesh);
 
+            // Create 50 cubes scattered randomly around the main text
+            const cubeGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            const cubeMaterial = new THREE.MeshNormalMaterial();
+
+            for (let i = 0; i < 50; i++) {
+                const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                cubeMesh.position.set(
+                    (Math.random() - 0.5) * 5,
+                    (Math.random() - 0.5) * 5,
+                    (Math.random() - 0.5) * 5
+                );
+                scene.add(cubeMesh);
+            }
+
             // animation
             function animate(time) {
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
 
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
-                camera.lookAt(textMesh.position);
-                
+                controls.update();
                 renderer.render(scene, camera);
             }
 
