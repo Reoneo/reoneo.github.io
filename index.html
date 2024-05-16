@@ -9,6 +9,7 @@
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
@@ -37,8 +38,8 @@
 
         // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 5; // Start further back for zoom-in effect
-
+        camera.position.z = 2; // Start further back to allow for zooming in
+        
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
 
@@ -49,128 +50,38 @@
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textGeometry = new THREE.TextGeometry('Vape.₿ox', {
+            const textGeometry = new THREE.TextGeometry('Vape.Box', {
                 font: font,
                 size: 0.2,
                 height: 0.05,
-                curveSegments: 32, // Increase curve segments for smoother text
+                curveSegments: 12,
                 bevelEnabled: true,
-                bevelThickness: 0.03,
-                bevelSize: 0.02,
+                bevelThickness: 0.02,
+                bevelSize: 0.01,
                 bevelOffset: 0,
-                bevelSegments: 8
+                bevelSegments: 5
             });
 
-            const textMaterial = new THREE.MeshNormalMaterial(); // Revert to MeshNormalMaterial
+            const textMaterial = new THREE.MeshNormalMaterial();
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textGeometry.center(); // Center the text
-
-            // Set initial rotation for the text to make it visible
-            textMesh.rotation.x = Math.PI / 6;
-            textMesh.rotation.y = Math.PI / 4;
             scene.add(textMesh);
 
-            let isUserInteracting = false,
-                onPointerDownPointerX = 0, onPointerDownPointerY = 0,
-                lon = 0, onPointerDownLon = 0,
-                lat = 0, onPointerDownLat = 0,
-                zoomInProgress = true;
-
-            // Add event listeners for mouse
-            document.addEventListener('mousedown', onPointerDown, false);
-            document.addEventListener('mousemove', onPointerMove, false);
-            document.addEventListener('mouseup', onPointerUp, false);
-
-            // Add event listeners for touch
-            document.addEventListener('touchstart', onTouchStart, false);
-            document.addEventListener('touchmove', onTouchMove, false);
-
-            function onPointerDown(event) {
-                isUserInteracting = true;
-
-                onPointerDownPointerX = event.clientX;
-                onPointerDownPointerY = event.clientY;
-
-                onPointerDownLon = lon;
-                onPointerDownLat = lat;
-            }
-
-            function onPointerMove(event) {
-                if (isUserInteracting) {
-                    lon = (event.clientX - onPointerDownPointerX) * 0.1 + onPointerDownLon;
-                    lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
-                }
-            }
-
-            function onPointerUp() {
-                isUserInteracting = false;
-            }
-
-            function onTouchStart(event) {
-                if (event.touches.length == 1) {
-                    event.preventDefault();
-
-                    isUserInteracting = true;
-
-                    onPointerDownPointerX = event.touches[0].pageX;
-                    onPointerDownPointerY = event.touches[0].pageY;
-
-                    onPointerDownLon = lon;
-                    onPointerDownLat = lat;
-                }
-            }
-
-            function onTouchMove(event) {
-                if (event.touches.length == 1) {
-                    event.preventDefault();
-
-                    lon = (event.touches[0].pageX - onPointerDownPointerX) * 0.1 + onPointerDownLon;
-                    lat = (event.touches[0].pageY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
-                }
-            }
-
+            // animation
             function animate(time) {
-                if (!isUserInteracting) {
-                    lon += 0.1; // Auto-rotate when not interacting
-                }
+                textMesh.rotation.x = time / 2000;
+                textMesh.rotation.y = time / 1000;
 
-                lat = Math.max(-85, Math.min(85, lat));
-                const phi = THREE.MathUtils.degToRad(90 - lat);
-                const theta = THREE.MathUtils.degToRad(lon);
-
-                // Zoom-in effect
-                if (zoomInProgress) {
-                    camera.position.z -= 0.02; // Adjust zoom speed
-                    if (camera.position.z <= 2.5) { // Stop zooming when camera is close enough
-                        zoomInProgress = false;
-                    }
-                }
-
-                // Floating effect for the camera
-                camera.position.x = 2 * Math.sin(phi) * Math.cos(theta);
-                camera.position.y = 2 * Math.cos(phi) + Math.sin(time / 1000) * 0.5;
-                camera.position.z = Math.max(2.5, 2 * Math.sin(phi) * Math.sin(theta));
-                camera.lookAt(scene.position);
-
-                // Slow twist and tilt for the text
-                textMesh.rotation.x += 0.005;
-                textMesh.rotation.y += 0.005;
-
+                // Create a cool moving effect for the camera
+                camera.position.x = Math.sin(time / 2000) * 1.5;
+                camera.position.y = Math.sin(time / 1000) * 0.5;
+                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                camera.lookAt(textMesh.position);
+                
                 renderer.render(scene, camera);
             }
 
             renderer.setAnimationLoop(animate);
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function () {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-
-            renderer.setSize(width, height);
         });
     </script>
 </body>
