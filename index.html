@@ -9,6 +9,9 @@
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+    <!-- Include Three.js OrbitControls library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
@@ -46,6 +49,13 @@
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
+        // Add OrbitControls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Enable damping (inertia)
+        controls.dampingFactor = 0.25; // Damping inertia factor
+        controls.screenSpacePanning = false; // Do not allow camera to pan up/down/left/right
+        controls.maxPolarAngle = Math.PI; // Limit vertical angle
+
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
@@ -71,16 +81,23 @@
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
 
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 2 + Math.sin(time / 3000) * 0.5; // Adjusted zoom in and out
-                camera.lookAt(textMesh.position);
-                
+                controls.update(); // Update controls
+
                 renderer.render(scene, camera);
             }
 
             renderer.setAnimationLoop(animate);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(width, height);
         });
     </script>
 </body>
