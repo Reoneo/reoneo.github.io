@@ -133,13 +133,15 @@
                 const phi = THREE.MathUtils.degToRad(90 - lat);
                 const theta = THREE.MathUtils.degToRad(lon);
 
+                // Floating effect for the camera
                 camera.position.x = 2 * Math.sin(phi) * Math.cos(theta);
-                camera.position.y = 2 * Math.cos(phi);
+                camera.position.y = 2 * Math.cos(phi) + Math.sin(time / 1000) * 0.5;
                 camera.position.z = 2 * Math.sin(phi) * Math.sin(theta);
                 camera.lookAt(scene.position);
 
-                textMesh.rotation.x = time / 2000;
-                textMesh.rotation.y = time / 1000;
+                // Slow twist and tilt for the text
+                textMesh.rotation.x = Math.sin(time / 2000) * 0.5;
+                textMesh.rotation.y = Math.cos(time / 1000) * 0.5;
 
                 renderer.render(scene, camera);
             }
