@@ -38,12 +38,12 @@
     <script>
         const width = window.innerWidth, height = window.innerHeight;
 
-        // init
+        // Initialize camera, scene, and renderer
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 3; // Start further back to allow for zooming in
-        
+        camera.position.z = 3;
+
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff); // Set background to white
+        scene.background = new THREE.Color(0xffffff);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
@@ -51,10 +51,10 @@
 
         // Add OrbitControls
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Enable damping (inertia)
-        controls.dampingFactor = 0.25; // Damping inertia factor
-        controls.screenSpacePanning = false; // Do not allow camera to pan up/down/left/right
-        controls.maxPolarAngle = Math.PI; // Limit vertical angle
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.25;
+        controls.screenSpacePanning = false;
+        controls.maxPolarAngle = Math.PI;
 
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
@@ -73,15 +73,15 @@
 
             const textMaterial = new THREE.MeshNormalMaterial();
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textGeometry.center(); // Center the text
+            textGeometry.center();
             scene.add(textMesh);
 
-            // animation
+            // Animation function
             function animate(time) {
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
 
-                controls.update(); // Update controls
+                controls.update();
 
                 renderer.render(scene, camera);
             }
