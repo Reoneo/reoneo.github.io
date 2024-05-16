@@ -64,6 +64,10 @@
             const textMaterial = new THREE.MeshNormalMaterial();
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textGeometry.center(); // Center the text
+
+            // Set initial rotation for the text
+            textMesh.rotation.x = Math.PI / 4;
+            textMesh.rotation.y = Math.PI / 6;
             scene.add(textMesh);
 
             let isUserInteracting = false,
@@ -140,8 +144,8 @@
                 camera.lookAt(scene.position);
 
                 // Slow twist and tilt for the text
-                textMesh.rotation.x = Math.sin(time / 2000) * 0.5;
-                textMesh.rotation.y = Math.cos(time / 1000) * 0.5;
+                textMesh.rotation.x += 0.005;
+                textMesh.rotation.y += 0.005;
 
                 renderer.render(scene, camera);
             }
