@@ -67,11 +67,65 @@
 
         renderer.setAnimationLoop(animate);
 
-        // Make camera interactive by mouse movement
+        // Variables to store mouse positions
+        let isDragging = false;
+        let previousMousePosition = {
+            x: 0,
+            y: 0
+        };
+
+        // Event listeners for mouse interaction
+        document.addEventListener('mousedown', (event) => {
+            isDragging = true;
+        });
+
         document.addEventListener('mousemove', (event) => {
-            camera.position.x = (event.clientX / window.innerWidth) * 2 - 1;
-            camera.position.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            camera.lookAt(scene.position);
+            if (isDragging) {
+                const deltaMove = {
+                    x: event.clientX - previousMousePosition.x,
+                    y: event.clientY - previousMousePosition.y
+                };
+
+                camera.position.x -= deltaMove.x * 0.005;
+                camera.position.y += deltaMove.y * 0.005;
+                camera.lookAt(scene.position);
+            }
+
+            previousMousePosition = {
+                x: event.clientX,
+                y: event.clientY
+            };
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // Touch events for mobile devices
+        document.addEventListener('touchstart', (event) => {
+            isDragging = true;
+            previousMousePosition.x = event.touches[0].clientX;
+            previousMousePosition.y = event.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', (event) => {
+            if (isDragging) {
+                const deltaMove = {
+                    x: event.touches[0].clientX - previousMousePosition.x,
+                    y: event.touches[0].clientY - previousMousePosition.y
+                };
+
+                camera.position.x -= deltaMove.x * 0.005;
+                camera.position.y += deltaMove.y * 0.005;
+                camera.lookAt(scene.position);
+
+                previousMousePosition.x = event.touches[0].clientX;
+                previousMousePosition.y = event.touches[0].clientY;
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
         });
     </script>
 </body>
