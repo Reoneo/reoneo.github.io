@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+    <!-- Include Three.js OrbitControls library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
@@ -47,6 +49,11 @@
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
+        // Add OrbitControls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Enable damping for a smoother experience
+        controls.dampingFactor = 0.1;
+
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
@@ -72,12 +79,8 @@
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
 
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
-                camera.lookAt(textMesh.position);
-                
+                controls.update(); // Update the controls
+
                 renderer.render(scene, camera);
             }
 
