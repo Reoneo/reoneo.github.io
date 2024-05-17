@@ -3,191 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Invaders</title>
+    <title>Vape.₿ox</title>
+    <!-- Include Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include Three.js FontLoader library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
+    <!-- Include Three.js TextGeometry library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #000;
-            font-family: Arial, sans-serif;
+            background-color: #fff; /* Set background color */
+            font-family: Arial, sans-serif; /* Set font family */
         }
         canvas {
             display: block;
-        }
-        header {
-            position: absolute;
-            top: 10px;
-            width: 100%;
-            text-align: center;
-            font-size: 24px;
-            color: #fff;
-            z-index: 1;
-        }
-        .controls {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 1;
-        }
-        .control-button {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.5);
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #000;
-            cursor: pointer;
         }
         footer {
             position: absolute;
             bottom: 20px;
             left: 20px;
-            color: #fff;
+            font-size: 12px;
+            color: #000; /* Set footer text color to black */
+            z-index: 10; /* Ensure footer appears above everything */
         }
     </style>
 </head>
 <body>
-    <header>Space Invaders</header>
     <div id="canvas-wrapper" aria-label="floating"></div>
-    <div class="controls">
-        <button class="control-button" id="left">&larr;</button>
-        <button class="control-button" id="right">&rarr;</button>
-        <button class="control-button" id="shoot">&#x25B2;</button>
-    </div>
-    <footer>Score: <span id="score">0</span></footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
+    <footer>Vape.₿ox</footer>
     <script>
         const width = window.innerWidth, height = window.innerHeight;
+
+        // init
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 2; // Start further back to allow for zooming in
+        
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+        scene.background = new THREE.Color(0xffffff); // Set background to white
+
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0xffffff, 1);
-        pointLight.position.set(5, 5, 5);
-        scene.add(pointLight);
+        // Load the font and create text geometry
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+            const textGeometry = new THREE.TextGeometry('Vape.Box', {
+                font: font,
+                size: 0.2,
+                height: 0.05,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 0.02,
+                bevelSize: 0.01,
+                bevelOffset: 0,
+                bevelSegments: 5
+            });
 
-        // Load textures
-        const loader = new THREE.TextureLoader();
-        const playerTexture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg', () => console.log('Player texture loaded'), undefined, (err) => console.error('Error loading player texture', err));
-        const enemyTexture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg', () => console.log('Enemy texture loaded'), undefined, (err) => console.error('Error loading enemy texture', err));
-        const bulletTexture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg', () => console.log('Bullet texture loaded'), undefined, (err) => console.error('Error loading bullet texture', err));
+            const textMaterial = new THREE.MeshNormalMaterial();
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textGeometry.center(); // Center the text
+            scene.add(textMesh);
 
-        // Create player
-        const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const playerMaterial = new THREE.MeshBasicMaterial({ map: playerTexture });
-        const player = new THREE.Mesh(playerGeometry, playerMaterial);
-        scene.add(player);
-        player.position.z = -5;
+            // animation
+            function animate(time) {
+                textMesh.rotation.x = time / 2000;
+                textMesh.rotation.y = time / 1000;
 
-        const enemies = [];
-        const bullets = [];
-        let score = 0;
-        let level = 1;
-        let enemySpeed = 0.02;
-        let playerSpeed = 0.1;
-        let bulletSpeed = 0.2;
-        let enemyBulletSpeed = 0.05;
-        let enemySpawnInterval = 1000;
-
-        const shootSound = new Howl({
-            src: ['https://freesound.org/data/previews/67/67583_634166-lq.mp3'],
-            onload: () => console.log('Shoot sound loaded'),
-            onloaderror: (id, err) => console.error('Error loading shoot sound', err)
-        });
-
-        const explosionSound = new Howl({
-            src: ['https://freesound.org/data/previews/342/342756_634166-lq.mp3'],
-            onload: () => console.log('Explosion sound loaded'),
-            onloaderror: (id, err) => console.error('Error loading explosion sound', err)
-        });
-
-        document.getElementById('left').addEventListener('click', () => {
-            player.position.x -= playerSpeed;
-        });
-
-        document.getElementById('right').addEventListener('click', () => {
-            player.position.x += playerSpeed;
-        });
-
-        document.getElementById('shoot').addEventListener('click', () => {
-            shootSound.play();
-            const bulletGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-            const bulletMaterial = new THREE.MeshBasicMaterial({ map: bulletTexture });
-            const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
-            bullet.position.set(player.position.x, player.position.y, player.position.z);
-            scene.add(bullet);
-            bullets.push(bullet);
-        });
-
-        function spawnEnemies() {
-            for (let i = 0; i < level * 5; i++) {
-                const enemyGeometry = new THREE.BoxGeometry(1, 1, 1);
-                const enemyMaterial = new THREE.MeshBasicMaterial({ map: enemyTexture });
-                const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
-                enemy.position.set(Math.random() * 10 - 5, Math.random() * 5 + 2, -5);
-                scene.add(enemy);
-                enemies.push(enemy);
+                // Create a cool moving effect for the camera
+                camera.position.x = Math.sin(time / 2000) * 1.5;
+                camera.position.y = Math.sin(time / 1000) * 0.5;
+                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                camera.lookAt(textMesh.position);
+                
+                renderer.render(scene, camera);
             }
-        }
 
-        function animate() {
-            requestAnimationFrame(animate);
-
-            bullets.forEach((bullet, index) => {
-                bullet.position.y += bulletSpeed;
-                if (bullet.position.y > 5) {
-                    scene.remove(bullet);
-                    bullets.splice(index, 1);
-                }
-            });
-
-            enemies.forEach((enemy, enemyIndex) => {
-                enemy.position.y -= enemySpeed;
-                if (enemy.position.y < -5) {
-                    scene.remove(enemy);
-                    enemies.splice(enemyIndex, 1);
-                }
-            });
-
-            bullets.forEach((bullet, bulletIndex) => {
-                enemies.forEach((enemy, enemyIndex) => {
-                    if (bullet.position.distanceTo(enemy.position) < 0.5) {
-                        explosionSound.play();
-                        scene.remove(enemy);
-                        enemies.splice(enemyIndex, 1);
-                        scene.remove(bullet);
-                        bullets.splice(bulletIndex, 1);
-                        score += 10;
-                        document.getElementById('score').textContent = score;
-                        if (enemies.length === 0) {
-                            level++;
-                            enemySpeed += 0.01;
-                            bulletSpeed += 0.01;
-                            enemyBulletSpeed += 0.01;
-                            spawnEnemies();
-                        }
-                    }
-                });
-            });
-
-            renderer.render(scene, camera);
-        }
-
-        spawnEnemies();
-        animate();
+            renderer.setAnimationLoop(animate);
+        });
     </script>
 </body>
 </html>
