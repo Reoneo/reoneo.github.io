@@ -38,23 +38,24 @@
     <script>
         const width = window.innerWidth, height = window.innerHeight;
 
-        // Create a scene
+        // Initialize scene, camera, and renderer
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
 
-        // Create a camera
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
         camera.position.z = 2;
 
-        // Create a renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
-        // Add orbit controls
+        // Add orbit controls for interaction
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.25;
+        controls.enableZoom = true;
 
-        // Add lighting
+        // Add lighting to the scene
         const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft white light
         scene.add(ambientLight);
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -78,7 +79,7 @@
 
             textGeometry.center(); // Center the text geometry
 
-            const textMaterial = new THREE.MeshPhongMaterial({ color: 0x0077ff });
+            const textMaterial = new THREE.MeshNormalMaterial();
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             scene.add(textMesh);
 
