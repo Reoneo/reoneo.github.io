@@ -1,4 +1,4 @@
-l<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -66,27 +66,6 @@ l<!DOCTYPE html>
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
             textGeometry.center(); // Center the text
             scene.add(textMesh);
-
-            // Create 1,000 cubes
-            const cubeGeometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
-            const cubeMaterial = new THREE.MeshNormalMaterial();
-
-            for (let i = 0; i < 1000; i++) {
-                const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-
-                // Position the cubes within a sphere around the main text
-                let position;
-                do {
-                    position = new THREE.Vector3(
-                        (Math.random() - 0.5) * 6,
-                        (Math.random() - 0.5) * 6,
-                        (Math.random() - 0.5) * 6
-                    );
-                } while (position.length() < 1); // Ensure cubes are not too close to the text
-
-                cube.position.copy(position);
-                scene.add(cube);
-            }
 
             // animation
             function animate(time) {
