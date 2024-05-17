@@ -39,8 +39,8 @@
         const width = window.innerWidth, height = window.innerHeight;
 
         // init
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 20);
+        camera.position.z = 10; // Start far enough to see all cubes
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
@@ -117,15 +117,23 @@
 
             // Create cubes
             const cubeGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 200; i++) {
                 const cube = new THREE.Mesh(cubeGeometry, textMaterial);
-                const distance = Math.random() * 2 + 1;
+                const distance = Math.random() * 5 + 2; // Ensure cubes are further out
                 const angle = Math.random() * Math.PI * 2;
                 cube.position.x = Math.cos(angle) * distance;
                 cube.position.y = Math.sin(angle) * distance;
                 cube.position.z = (Math.random() - 0.5) * 2;
                 scene.add(cube);
             }
+
+            // Initial zoom-in twist animation
+            gsap.to(camera.position, {
+                duration: 5,
+                z: 1.5, // Zoom in
+                onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0)),
+                ease: "power1.inOut"
+            });
 
             // animation
             function animate(time) {
@@ -213,13 +221,19 @@
             const quaternion = new THREE.Quaternion().setFromAxisAngle(randomAxis, angle);
             targetPosition.applyQuaternion(quaternion);
 
+            // Ensure the camera doesn't zoom too far into the main object
+            if (targetPosition.distanceTo(new THREE.Vector3(0, 0, 0)) < 1.5) {
+                targetPosition.setLength(1.5); // Set a minimum distance
+            }
+
             // Use gsap to smoothly transition to the new camera position
             gsap.to(camera.position, {
                 duration: 2,
                 x: targetPosition.x,
                 y: targetPosition.y,
                 z: targetPosition.z,
-                onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0))
+                onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0)),
+                ease: "power1.inOut"
             });
         }
     </script>
