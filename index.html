@@ -38,16 +38,18 @@
     <script>
         const width = window.innerWidth, height = window.innerHeight;
 
-        // init
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
-
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff); // Set background to white
-
+        // Initialize the renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+
+        // Initialize the scene
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff);
+
+        // Initialize the camera
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 2;
 
         // Add OrbitControls
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -98,7 +100,7 @@
                 scene.add(cube);
             }
 
-            // animation
+            // Animation function
             function animate(time) {
                 textMesh.rotation.x = 0; // Keep text still
                 textMesh.rotation.y = 0; // Keep text still
@@ -107,7 +109,18 @@
                 renderer.render(scene, camera);
             }
 
+            // Set the animation loop
             renderer.setAnimationLoop(animate);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
         });
     </script>
 </body>
