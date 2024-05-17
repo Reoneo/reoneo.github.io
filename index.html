@@ -115,6 +115,18 @@
             particleSystem.position.z = -1; // Position behind the text
             scene.add(particleSystem);
 
+            // Create cubes
+            const cubeGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            for (let i = 0; i < 50; i++) {
+                const cube = new THREE.Mesh(cubeGeometry, textMaterial);
+                const distance = Math.random() * 2 + 1;
+                const angle = Math.random() * Math.PI * 2;
+                cube.position.x = Math.cos(angle) * distance;
+                cube.position.y = Math.sin(angle) * distance;
+                cube.position.z = (Math.random() - 0.5) * 2;
+                scene.add(cube);
+            }
+
             // animation
             function animate(time) {
                 textMesh.rotation.x = Math.sin(time / 2000) * 0.1;
