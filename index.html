@@ -65,6 +65,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
     <script>
+        // Set up scene, camera, and renderer
         const width = window.innerWidth, height = window.innerHeight;
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
@@ -72,17 +73,20 @@
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
+        // Lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
         const pointLight = new THREE.PointLight(0xffffff, 1);
         pointLight.position.set(5, 5, 5);
         scene.add(pointLight);
 
+        // Load textures
         const loader = new THREE.TextureLoader();
-        const playerTexture = loader.load('path/to/player-texture.png');
-        const enemyTexture = loader.load('path/to/enemy-texture.png');
-        const bulletTexture = loader.load('path/to/bullet-texture.png');
+        const playerTexture = loader.load('path/to/player-texture.png', () => console.log('Player texture loaded'), undefined, (err) => console.error('Error loading player texture', err));
+        const enemyTexture = loader.load('path/to/enemy-texture.png', () => console.log('Enemy texture loaded'), undefined, (err) => console.error('Error loading enemy texture', err));
+        const bulletTexture = loader.load('path/to/bullet-texture.png', () => console.log('Bullet texture loaded'), undefined, (err) => console.error('Error loading bullet texture', err));
 
+        // Create player
         const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
         const playerMaterial = new THREE.MeshBasicMaterial({ map: playerTexture });
         const player = new THREE.Mesh(playerGeometry, playerMaterial);
@@ -101,11 +105,15 @@
         let enemySpawnInterval = 1000;
 
         const shootSound = new Howl({
-            src: ['path/to/shoot-sound.mp3']
+            src: ['path/to/shoot-sound.mp3'],
+            onload: () => console.log('Shoot sound loaded'),
+            onloaderror: (id, err) => console.error('Error loading shoot sound', err)
         });
 
         const explosionSound = new Howl({
-            src: ['path/to/explosion-sound.mp3']
+            src: ['path/to/explosion-sound.mp3'],
+            onload: () => console.log('Explosion sound loaded'),
+            onloaderror: (id, err) => console.error('Error loading explosion sound', err)
         });
 
         document.getElementById('left').addEventListener('click', () => {
