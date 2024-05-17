@@ -39,7 +39,7 @@
         // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
         camera.position.z = 2; // Start further back to allow for zooming in
-        
+
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
 
@@ -67,21 +67,93 @@
             textGeometry.center(); // Center the text
             scene.add(textMesh);
 
+            // Create smoke particles
+            const particleCount = 1000;
+            const particles = new THREE.BufferGeometry();
+            const positions = [];
+            const alphas = [];
+            for (let i = 0; i < particleCount; i++) {
+                positions.push((Math.random() - 0.5) * 2);
+                positions.push(Math.random() * 2 - 1);
+                positions.push((Math.random() - 0.5) * 2);
+
+                alphas.push(1.0);
+            }
+            particles.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            particles.setAttribute('alpha', new THREE.Float32BufferAttribute(alphas, 1));
+
+            const particleMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    pointTexture: { value: new THREE.TextureLoader().load('https://threejs.org/examples/textures/sprites/smoke.png') }
+                },
+                vertexShader: `
+                    attribute float alpha;
+                    varying float vAlpha;
+                    void main() {
+                        vAlpha = alpha;
+                        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                        gl_PointSize = 10.0 * (300.0 / -mvPosition.z);
+                        gl_Position = projectionMatrix * mvPosition;
+                    }
+                `,
+                fragmentShader: `
+                    uniform sampler2D pointTexture;
+                    varying float vAlpha;
+                    void main() {
+                        gl_FragColor = texture2D(pointTexture, gl_PointCoord);
+                        gl_FragColor.a *= vAlpha;
+                    }
+                `,
+                blending: THREE.AdditiveBlending,
+                depthTest: false,
+                transparent: true
+            });
+
+            const particleSystem = new THREE.Points(particles, particleMaterial);
+            particleSystem.position.z = -1; // Position behind the text
+            scene.add(particleSystem);
+
             // animation
             function animate(time) {
-                textMesh.rotation.x = time / 2000;
-                textMesh.rotation.y = time / 1000;
+                textMesh.rotation.x = Math.sin(time / 2000) * 0.1;
+                textMesh.rotation.z = Math.sin(time / 1500) * 0.1;
 
                 // Create a cool moving effect for the camera
                 camera.position.x = Math.sin(time / 2000) * 1.5;
                 camera.position.y = Math.sin(time / 1000) * 0.5;
                 camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
                 camera.lookAt(textMesh.position);
-                
+
+                // Animate smoke particles
+                const positions = particles.attributes.position.array;
+                const alphas = particles.attributes.alpha.array;
+                for (let i = 0; i < particleCount; i++) {
+                    positions[i * 3 + 1] += 0.01; // Move particles up
+                    if (positions[i * 3 + 1] > 1) {
+                        positions[i * 3 + 1] = -1; // Reset particle position
+                        alphas[i] = 1.0; // Reset alpha
+                    } else {
+                        alphas[i] -= 0.01; // Fade out
+                    }
+                }
+                particles.attributes.position.needsUpdate = true;
+                particles.attributes.alpha.needsUpdate = true;
+
                 renderer.render(scene, camera);
             }
 
             renderer.setAnimationLoop(animate);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(width, height);
         });
     </script>
 </body>
