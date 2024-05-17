@@ -3,59 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape.₿ox</title>
-    <!-- Include Three.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <title>Space Invaders</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #000; /* Set background color */
-            font-family: Arial, sans-serif; /* Set font family */
+            background-color: #000;
+            font-family: Arial, sans-serif;
         }
         canvas {
             display: block;
+        }
+        header {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+            z-index: 1;
+        }
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1;
+        }
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+            cursor: pointer;
         }
         footer {
             position: absolute;
             bottom: 20px;
             left: 20px;
-            color: #fff; /* Set footer text color */
+            color: #fff;
         }
     </style>
 </head>
 <body>
+    <header>Space Invaders</header>
     <div id="canvas-wrapper" aria-label="floating"></div>
- 
-    </footer>
+    <div class="controls">
+        <button class="control-button" id="left">&larr;</button>
+        <button class="control-button" id="right">&rarr;</button>
+        <button class="control-button" id="shoot">&#x25B2;</button>
+    </div>
+    <footer>Score: <span id="score">0</span></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // JavaScript code for your Three.js animation
         const width = window.innerWidth, height = window.innerHeight;
-
-        // init
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 1;
-        
         const scene = new THREE.Scene();
-        
-        const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-        const material = new THREE.MeshNormalMaterial();
-        
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-        
+        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
-        
-        // animation
-        function animate(time) {
-            mesh.rotation.x = time / 2000;
-            mesh.rotation.y = time / 1000;
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xffffff, 1);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        const loader = new THREE.TextureLoader();
+        const playerTexture = loader.load('path/to/player-texture.png');
+        const enemyTexture = loader.load('path/to/enemy-texture.png');
+        const bulletTexture = loader.load('path/to/bullet-texture.png');
+
+        const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const playerMaterial = new THREE.MeshBasicMaterial({ map: playerTexture });
+        const player = new THREE.Mesh(playerGeometry, playerMaterial);
+        scene.add(player);
+        player.position.z = -5;
+
+        const enemies = [];
+        const bullets = [];
+        const enemyBullets = [];
+        let score = 0;
+        let level = 1;
+        let enemySpeed = 0.02;
+        let playerSpeed = 0.1;
+        let bulletSpeed = 0.2;
+        let enemyBulletSpeed = 0.05;
+        let enemySpawnInterval = 1000;
+
+        document.getElementById('left').addEventListener('click', () => {
+            player.position.x -= playerSpeed;
+        });
+
+        document.getElementById('right').addEventListener('click', () => {
+            player.position.x += playerSpeed;
+        });
+
+        document.getElementById('shoot').addEventListener('click', () => {
+            const bulletGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            const bulletMaterial = new THREE.MeshBasicMaterial({ map: bulletTexture });
+            const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
+            bullet.position.set(player.position.x, player.position.y, player.position.z);
+            scene.add(bullet);
+            bullets.push(bullet);
+        });
+
+        function spawnEnemies() {
+            for (let i = 0; i < level * 5; i++) {
+                const enemyGeometry = new THREE.BoxGeometry(1, 1, 1);
+                const enemyMaterial = new THREE.MeshBasicMaterial({ map: enemyTexture });
+                const enemy = new THREE.Mesh(enemyGeometry, enemyMaterial);
+                enemy.position.set(Math.random() * 10 - 5, Math.random() * 5 + 2, -5);
+                scene.add(enemy);
+                enemies.push(enemy);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            bullets.forEach((bullet, index) => {
+                bullet.position.y += bulletSpeed;
+                if (bullet.position.y > 5) {
+                    scene.remove(bullet);
+                    bullets.splice(index, 1);
+                }
+            });
+
+            enemies.forEach((enemy, enemyIndex) => {
+                enemy.position.y -= enemySpeed;
+                if (enemy.position.y < -5) {
+                    scene.remove(enemy);
+                    enemies.splice(enemyIndex, 1);
+                }
+            });
+
+            bullets.forEach((bullet, bulletIndex) => {
+                enemies.forEach((enemy, enemyIndex) => {
+                    if (bullet.position.distanceTo(enemy.position) < 0.5) {
+                        scene.remove(enemy);
+                        enemies.splice(enemyIndex, 1);
+                        scene.remove(bullet);
+                        bullets.splice(bulletIndex, 1);
+                        score += 10;
+                        document.getElementById('score').textContent = score;
+                        if (enemies.length === 0) {
+                            level++;
+                            enemySpeed += 0.01;
+                            bulletSpeed += 0.01;
+                            enemyBulletSpeed += 0.01;
+                            spawnEnemies();
+                        }
+                    }
+                });
+            });
+
             renderer.render(scene, camera);
         }
 
-        renderer.setAnimationLoop(animate);
+        spawnEnemies();
+        animate();
     </script>
 </body>
 </html>
