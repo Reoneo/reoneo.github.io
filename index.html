@@ -6,6 +6,8 @@
     <title>Vape.₿ox</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <!-- Include Three.js FontLoader library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
@@ -37,7 +39,7 @@
         const width = window.innerWidth, height = window.innerHeight;
 
         // init
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 50);
         camera.position.z = 10; // Start further back for the initial zoom effect
 
         const scene = new THREE.Scene();
@@ -46,6 +48,15 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+
+        // Add OrbitControls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.screenSpacePanning = false;
+        controls.minDistance = 1.5;
+        controls.maxDistance = 20;
+        controls.maxPolarAngle = Math.PI / 2;
 
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
@@ -67,13 +78,15 @@
             textGeometry.center(); // Center the text
             scene.add(textMesh);
 
-            // Create 1,000 wireframe cubes
+            // Create 1,000 cubes with white frames and white surfaces
             const cubeGeometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
-            const cubeMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+            const cubeFrameMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+            const cubeSurfaceMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
             for (let i = 0; i < 1000; i++) {
+                const cube = new THREE.Mesh(cubeGeometry, cubeSurfaceMaterial);
                 const edges = new THREE.EdgesGeometry(cubeGeometry);
-                const cube = new THREE.LineSegments(edges, cubeMaterial);
+                const cubeFrame = new THREE.LineSegments(edges, cubeFrameMaterial);
 
                 // Position the cubes within a sphere around the main text
                 let position;
@@ -86,7 +99,10 @@
                 } while (position.length() < 1); // Ensure cubes are not too close to the text
 
                 cube.position.copy(position);
+                cubeFrame.position.copy(position);
+
                 scene.add(cube);
+                scene.add(cubeFrame);
             }
 
             // animation
@@ -94,15 +110,7 @@
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
 
-                // Smooth zoom-in effect
-                if (camera.position.z > 2) {
-                    camera.position.z -= (camera.position.z - 2) * 0.02; // Smooth zoom
-                }
-
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.lookAt(textMesh.position);
+                controls.update();
 
                 renderer.render(scene, camera);
             }
