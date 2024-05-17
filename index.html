@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+    <!-- Include GSAP library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -177,27 +179,36 @@
         function changeCameraAngle(direction) {
             const angle = Math.PI / 2; // 90 degrees in radians
             const distanceChange = Math.random() * 0.5 + 0.5; // Random distance change
+            const targetPosition = camera.position.clone(); // Clone the current camera position
 
             switch (direction) {
                 case 'right':
-                    camera.position.x += distanceChange;
+                    targetPosition.x += distanceChange;
                     break;
                 case 'left':
-                    camera.position.x -= distanceChange;
+                    targetPosition.x -= distanceChange;
                     break;
                 case 'up':
-                    camera.position.y += distanceChange;
+                    targetPosition.y += distanceChange;
                     break;
                 case 'down':
-                    camera.position.y -= distanceChange;
+                    targetPosition.y -= distanceChange;
                     break;
             }
 
             // Rotate the camera by 90 degrees in a random direction
             const randomAxis = new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize();
             const quaternion = new THREE.Quaternion().setFromAxisAngle(randomAxis, angle);
-            camera.position.applyQuaternion(quaternion);
-            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            targetPosition.applyQuaternion(quaternion);
+
+            // Use gsap to smoothly transition to the new camera position
+            gsap.to(camera.position, {
+                duration: 2,
+                x: targetPosition.x,
+                y: targetPosition.y,
+                z: targetPosition.z,
+                onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0))
+            });
         }
     </script>
 </body>
