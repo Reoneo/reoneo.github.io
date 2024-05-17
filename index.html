@@ -10,8 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
-    <!-- Include OrbitControls -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
@@ -38,26 +36,16 @@
     <script>
         const width = window.innerWidth, height = window.innerHeight;
 
-        // Initialize the renderer
+        // init
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 2; // Start further back to allow for zooming in
+        
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff); // Set background to white
+
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
-
-        // Initialize the scene
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff);
-
-        // Initialize the camera
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2;
-
-        // Add OrbitControls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enablePan = false; // Disable panning
-        controls.minDistance = 1.5; // Set minimum zoom distance
-        controls.maxDistance = 2.5; // Set maximum zoom distance
-        controls.enableDamping = true; // Enable damping (inertia)
-        controls.dampingFactor = 0.05; // Damping inertia factor
 
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
@@ -100,27 +88,21 @@
                 scene.add(cube);
             }
 
-            // Animation function
+            // animation
             function animate(time) {
-                textMesh.rotation.x = 0; // Keep text still
-                textMesh.rotation.y = 0; // Keep text still
+                textMesh.rotation.x = time / 2000;
+                textMesh.rotation.y = time / 1000;
 
-                controls.update(); // Update controls
+                // Create a cool moving effect for the camera
+                camera.position.x = Math.sin(time / 2000) * 1.5;
+                camera.position.y = Math.sin(time / 1000) * 0.5;
+                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                camera.lookAt(textMesh.position);
+                
                 renderer.render(scene, camera);
             }
 
-            // Set the animation loop
             renderer.setAnimationLoop(animate);
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-
-            renderer.setSize(width, height);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
         });
     </script>
 </body>
