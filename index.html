@@ -39,7 +39,7 @@
         const width = window.innerWidth, height = window.innerHeight;
 
         // init
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 20);
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 50);
         camera.position.z = 10; // Start far enough to see all cubes
 
         const scene = new THREE.Scene();
@@ -117,23 +117,40 @@
 
             // Create cubes
             const cubeGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            const textPosition = textMesh.position;
+
+            // 200 cubes in front
             for (let i = 0; i < 200; i++) {
                 const cube = new THREE.Mesh(cubeGeometry, textMaterial);
-                const distance = Math.random() * 5 + 2; // Ensure cubes are further out
+                const distance = Math.random() * 5 + 2;
                 const angle = Math.random() * Math.PI * 2;
                 cube.position.x = Math.cos(angle) * distance;
                 cube.position.y = Math.sin(angle) * distance;
-                cube.position.z = (Math.random() - 0.5) * 2;
+                cube.position.z = (Math.random() - 0.5) * 2 + textPosition.z - 5;
                 scene.add(cube);
             }
 
-            // Initial zoom-in twist animation
-            gsap.to(camera.position, {
-                duration: 5,
-                z: 1.5, // Zoom in
-                onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0)),
-                ease: "power1.inOut"
-            });
+            // 200 cubes behind
+            for (let i = 0; i < 200; i++) {
+                const cube = new THREE.Mesh(cubeGeometry, textMaterial);
+                const distance = Math.random() * 5 + 2;
+                const angle = Math.random() * Math.PI * 2;
+                cube.position.x = Math.cos(angle) * distance;
+                cube.position.y = Math.sin(angle) * distance;
+                cube.position.z = (Math.random() - 0.5) * 2 + textPosition.z + 5;
+                scene.add(cube);
+            }
+
+            // Initial complex zoom-in twist animation
+            gsap.fromTo(camera.position, 
+                { x: 10, y: 10, z: 10 }, 
+                { 
+                    duration: 5, 
+                    x: 1.5, y: 1.5, z: 1.5, 
+                    onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0)),
+                    ease: "power1.inOut" 
+                }
+            );
 
             // animation
             function animate(time) {
@@ -159,83 +176,53 @@
 
         // Handle swipe events
         let startX, startY, endX, endY;
+        let startTime, endTime;
 
         document.addEventListener('touchstart', function(e) {
             startX = e.changedTouches[0].screenX;
             startY = e.changedTouches[0].screenY;
+            startTime = Date.now();
         }, false);
 
         document.addEventListener('touchend', function(e) {
             endX = e.changedTouches[0].screenX;
             endY = e.changedTouches[0].screenY;
+            endTime = Date.now();
             handleSwipe();
         }, false);
 
         function handleSwipe() {
             const dx = endX - startX;
             const dy = endY - startY;
+            const duration = (endTime - startTime) / 1000;
 
-            if (Math.abs(dx) > Math.abs(dy)) {
-                // Horizontal swipe
-                if (dx > 0) {
-                    // Swipe right
-                    changeCameraAngle('right');
-                } else {
-                    // Swipe left
-                    changeCameraAngle('left');
-                }
-            } else {
-                // Vertical swipe
-                if (dy > 0) {
-                    // Swipe down
-                    changeCameraAngle('down');
-                } else {
-                    // Swipe up
-                    changeCameraAngle('up');
-                }
-            }
+            const swipeDirection = Math.atan2(dy, dx);
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const speed = distance / duration;
+
+            changeCameraAngle(swipeDirection, speed);
         }
 
-        function changeCameraAngle(direction) {
-            const angle = Math.PI / 2; // 90 degrees in radians
-            const distanceChange = Math.random() * 0.5 + 0.5; // Random distance change
+        function changeCameraAngle(direction, speed) {
+            const radius = 5;
+            const angleChange = direction * (Math.PI / 180);
             const targetPosition = camera.position.clone(); // Clone the current camera position
 
-            switch (direction) {
-                case 'right':
-                    targetPosition.x += distanceChange;
-                    break;
-                case 'left':
-                    targetPosition.x -= distanceChange;
-                    break;
-                case 'up':
-                    targetPosition.y += distanceChange;
-                    break;
-                case 'down':
-                    targetPosition.y -= distanceChange;
-                    break;
-            }
+            const angleX = Math.cos(angleChange) * radius;
+            const angleY = Math.sin(angleChange) * radius;
 
-            // Rotate the camera by 90 degrees in a random direction
-            const randomAxis = new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize();
-            const quaternion = new THREE.Quaternion().setFromAxisAngle(randomAxis, angle);
-            targetPosition.applyQuaternion(quaternion);
+            targetPosition.x += angleX * speed;
+            targetPosition.y += angleY * speed;
 
-            // Ensure the camera doesn't zoom too far into the main object
-            if (targetPosition.distanceTo(new THREE.Vector3(0, 0, 0)) < 1.5) {
-                targetPosition.setLength(1.5); // Set a minimum distance
+            // Constrain to front and sides
+            if (targetPosition.z > 5) {
+                targetPosition.z = 5;
+            } else if (targetPosition.z < -5) {
+                targetPosition.z = -5;
             }
 
             // Use gsap to smoothly transition to the new camera position
             gsap.to(camera.position, {
-                duration: 2,
+                duration: 1,
                 x: targetPosition.x,
                 y: targetPosition.y,
-                z: targetPosition.z,
-                onUpdate: () => camera.lookAt(new THREE.Vector3(0, 0, 0)),
-                ease: "power1.inOut"
-            });
-        }
-    </script>
-</body>
-</html>
