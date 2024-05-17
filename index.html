@@ -36,55 +36,58 @@
         <img id="footer-image" src="https://imgs.search.brave.com/LXvqCdGG_3hdMxsJQbeCtZcCseEiPVOSkVdwnsV6WJo/rs:fit:500:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi9jL2NlL1hf/bG9nb18yMDIzLnN2/Zy8yMjBweC1YX2xv/Z29fMjAyMy5zdmcu/cG5n" alt="Footer Image">
     </a>
     <script>
-        const width = window.innerWidth, height = window.innerHeight;
+        // Ensure footer loads first
+        window.onload = function() {
+            const width = window.innerWidth, height = window.innerHeight;
 
-        // Main Scene and Animation
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
-        
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff); // Set background to white
+            // Main Scene and Animation
+            const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+            camera.position.z = 2; // Start further back to allow for zooming in
+            
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xffffff); // Set background to white
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(width, height);
-        document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
-        // Load the font and create text geometry
-        const loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textGeometry = new THREE.TextGeometry('Vape.Box', {
-                font: font,
-                size: 0.2,
-                height: 0.05,
-                curveSegments: 12,
-                bevelEnabled: true,
-                bevelThickness: 0.02,
-                bevelSize: 0.01,
-                bevelOffset: 0,
-                bevelSegments: 5
+            // Load the font and create text geometry
+            const loader = new THREE.FontLoader();
+            loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+                const textGeometry = new THREE.TextGeometry('Vape.Box', {
+                    font: font,
+                    size: 0.2,
+                    height: 0.05,
+                    curveSegments: 12,
+                    bevelEnabled: true,
+                    bevelThickness: 0.02,
+                    bevelSize: 0.01,
+                    bevelOffset: 0,
+                    bevelSegments: 5
+                });
+
+                const textMaterial = new THREE.MeshNormalMaterial();
+                const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                textGeometry.center(); // Center the text
+                scene.add(textMesh);
+
+                // animation
+                function animate(time) {
+                    textMesh.rotation.x = time / 2000;
+                    textMesh.rotation.y = time / 1000;
+
+                    // Create a cool moving effect for the camera
+                    camera.position.x = Math.sin(time / 2000) * 1.5;
+                    camera.position.y = Math.sin(time / 1000) * 0.5;
+                    camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                    camera.lookAt(textMesh.position);
+                    
+                    renderer.render(scene, camera);
+                }
+
+                renderer.setAnimationLoop(animate);
             });
-
-            const textMaterial = new THREE.MeshNormalMaterial();
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textGeometry.center(); // Center the text
-            scene.add(textMesh);
-
-            // animation
-            function animate(time) {
-                textMesh.rotation.x = time / 2000;
-                textMesh.rotation.y = time / 1000;
-
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
-                camera.lookAt(textMesh.position);
-                
-                renderer.render(scene, camera);
-            }
-
-            renderer.setAnimationLoop(animate);
-        });
+        }
     </script>
 </body>
 </html>
