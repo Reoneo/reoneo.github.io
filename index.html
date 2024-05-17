@@ -157,13 +157,32 @@
                 }
             });
 
+            // Raycaster for detecting clicks on cubes
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+
+            // Event listener for mouse clicks
+            window.addEventListener('click', (event) => {
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects(scene.children);
+
+                for (let i = 0; i < intersects.length; i++) {
+                    if (intersects[i].object === secondClosestCube) {
+                        window.open('https://x.com/prettyulgy?t=gFx7-kYNxXR9Bkwj1o1pLg&s=09', '_blank');
+                        break;
+                    }
+                }
+            });
+
             // Animation loop
             function animate() {
                 requestAnimationFrame(animate);
 
-                // Rotate the main text object
-                textMesh.rotation.x += 0.01;
-                textMesh.rotation.y += 0.01;
+                // Make the main text object always face the camera
+                textMesh.quaternion.copy(camera.quaternion);
 
                 // Update controls
                 controls.update();
