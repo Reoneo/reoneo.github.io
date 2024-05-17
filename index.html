@@ -88,28 +88,6 @@
                 renderer.setAnimationLoop(animate);
             });
         }
-
-        // Swipe down to refresh feature
-        let touchstartY = 0;
-        let touchendY = 0;
-
-        function handleTouchStart(event) {
-            touchstartY = event.changedTouches[0].screenY;
-        }
-
-        function handleTouchMove(event) {
-            touchendY = event.changedTouches[0].screenY;
-        }
-
-        function handleTouchEnd() {
-            if (touchendY > touchstartY + 50) { // Swipe down threshold
-                location.reload();
-            }
-        }
-
-        document.addEventListener('touchstart', handleTouchStart, false);
-        document.addEventListener('touchmove', handleTouchMove, false);
-        document.addEventListener('touchend', handleTouchEnd, false);
     </script>
 </body>
 </html>
