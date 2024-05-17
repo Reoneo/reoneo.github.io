@@ -6,10 +6,6 @@
     <title>Vape.₿ox</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Include Three.js FontLoader library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
-    <!-- Include Three.js TextGeometry library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
     <!-- Include OrbitControls -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
@@ -17,7 +13,6 @@
             margin: 0;
             overflow: hidden;
             background-color: #fff; /* Set background color */
-            font-family: Arial, sans-serif; /* Set font family */
         }
         canvas {
             display: block;
@@ -36,15 +31,16 @@
     <div id="canvas-wrapper" aria-label="floating"></div>
     <footer>Vape.₿ox</footer>
     <script>
-        const width = window.innerWidth, height = window.innerHeight;
-
-        // Initialize camera
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
+        const width = window.innerWidth;
+        const height = window.innerHeight;
 
         // Initialize scene
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
+
+        // Initialize camera
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 2;
 
         // Initialize renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -59,58 +55,24 @@
         controls.maxDistance = 5; // Max zoom-out distance
         controls.minDistance = 1; // Min zoom-in distance
 
-        // Load the font and create text geometry
-        const loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const textGeometry = new THREE.TextGeometry('Vape.Box', {
-                font: font,
-                size: 0.2,
-                height: 0.05,
-                curveSegments: 12,
-                bevelEnabled: true,
-                bevelThickness: 0.02,
-                bevelSize: 0.01,
-                bevelOffset: 0,
-                bevelSegments: 5
-            });
+        // Add a simple cube to the scene
+        const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+        const material = new THREE.MeshNormalMaterial();
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
 
-            const textMaterial = new THREE.MeshNormalMaterial();
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textGeometry.center(); // Center the text
-            scene.add(textMesh);
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
 
-            // Create 1,000 cubes
-            const cubeGeometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
-            const cubeMaterial = new THREE.MeshNormalMaterial();
+            // Update controls
+            controls.update();
 
-            for (let i = 0; i < 1000; i++) {
-                const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            // Render the scene
+            renderer.render(scene, camera);
+        }
 
-                // Position the cubes within a sphere around the main text
-                let position;
-                do {
-                    position = new THREE.Vector3(
-                        (Math.random() - 0.5) * 6,
-                        (Math.random() - 0.5) * 6,
-                        (Math.random() - 0.5) * 6
-                    );
-                } while (position.length() < 1); // Ensure cubes are not too close to the text
-
-                cube.position.copy(position);
-                scene.add(cube);
-            }
-
-            // Animation loop
-            function animate(time) {
-                textMesh.rotation.x = time / 2000;
-                textMesh.rotation.y = time / 1000;
-
-                controls.update(); // Update controls with damping
-                renderer.render(scene, camera);
-            }
-
-            renderer.setAnimationLoop(animate);
-        });
+        animate();
 
         // Handle window resize
         window.addEventListener('resize', () => {
