@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,13 +10,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
-    <!-- Include OrbitControls -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #ffffff; /* Set background color to white */
+            background-color: #fff; /* Set background color */
             font-family: Arial, sans-serif; /* Set font family */
         }
         canvas {
@@ -38,26 +36,16 @@
     <script>
         const width = window.innerWidth, height = window.innerHeight;
 
-        // Initialize scene
+        // init
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 2; // Start further back to allow for zooming in
+        
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
 
-        // Initialize camera
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
-
-        // Initialize renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
-
-        // Add OrbitControls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.screenSpacePanning = false;
-        controls.maxDistance = 10; // Max zoom-out distance
-        controls.minDistance = 2; // Min zoom-in distance
 
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
@@ -82,10 +70,6 @@
             // Create 1,000 cubes
             const cubeGeometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
             const cubeMaterial = new THREE.MeshNormalMaterial();
-            let closestCube = null;
-            let secondClosestCube = null;
-            let minDistance = Infinity;
-            let secondMinDistance = Infinity;
 
             for (let i = 0; i < 1000; i++) {
                 const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
@@ -102,107 +86,23 @@
 
                 cube.position.copy(position);
                 scene.add(cube);
-
-                // Find the closest and second closest cubes to the center
-                const distance = position.length();
-                if (distance < minDistance) {
-                    secondMinDistance = minDistance;
-                    secondClosestCube = closestCube;
-                    minDistance = distance;
-                    closestCube = cube;
-                } else if (distance < secondMinDistance) {
-                    secondMinDistance = distance;
-                    secondClosestCube = cube;
-                }
             }
 
-            // Load the 4K Facebook logo texture and apply it to the closest cube
-            const textureLoader = new THREE.TextureLoader();
-            const fbTextureUrl = 'https://i.imgur.com/v6Yj90A.jpeg';
-            textureLoader.load(fbTextureUrl, function (texture) {
-                if (closestCube) {
-                    closestCube.geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2); // Make it larger
+            // animation
+            function animate(time) {
+                textMesh.rotation.x = time / 2000;
+                textMesh.rotation.y = time / 1000;
 
-                    // Apply the texture to all six faces
-                    const materials = [
-                        new THREE.MeshBasicMaterial({ map: texture }), // right
-                        new THREE.MeshBasicMaterial({ map: texture }), // left
-                        new THREE.MeshBasicMaterial({ map: texture }), // top
-                        new THREE.MeshBasicMaterial({ map: texture }), // bottom
-                        new THREE.MeshBasicMaterial({ map: texture }), // front
-                        new THREE.MeshBasicMaterial({ map: texture })  // back
-                    ];
-
-                    closestCube.material = materials;
-                }
-            });
-
-            // Load the Twitter X logo texture and apply it to the second closest cube
-            const twitterTextureUrl = 'https://assets-global.website-files.com/5d66bdc65e51a0d114d15891/64cebdd90aef8ef8c749e848_X-EverythingApp-Logo-Twitter.jpg';
-            textureLoader.load(twitterTextureUrl, function (texture) {
-                if (secondClosestCube) {
-                    secondClosestCube.geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2); // Make it larger
-
-                    // Apply the texture to all six faces
-                    const materials = [
-                        new THREE.MeshBasicMaterial({ map: texture }), // right
-                        new THREE.MeshBasicMaterial({ map: texture }), // left
-                        new THREE.MeshBasicMaterial({ map: texture }), // top
-                        new THREE.MeshBasicMaterial({ map: texture }), // bottom
-                        new THREE.MeshBasicMaterial({ map: texture }), // front
-                        new THREE.MeshBasicMaterial({ map: texture })  // back
-                    ];
-
-                    secondClosestCube.material = materials;
-                }
-            });
-
-            // Raycaster for detecting clicks on cubes
-            const raycaster = new THREE.Raycaster();
-            const mouse = new THREE.Vector2();
-
-            // Event listener for mouse clicks
-            window.addEventListener('click', (event) => {
-                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-                raycaster.setFromCamera(mouse, camera);
-                const intersects = raycaster.intersectObjects(scene.children);
-
-                for (let i = 0; i < intersects.length; i++) {
-                    if (intersects[i].object === secondClosestCube) {
-                        window.open('https://x.com/prettyulgy?t=gFx7-kYNxXR9Bkwj1o1pLg&s=09', '_blank');
-                        break;
-                    }
-                }
-            });
-
-            // Animation loop
-            function animate() {
-                requestAnimationFrame(animate);
-
-                // Make the main text object always face the camera
-                textMesh.quaternion.copy(camera.quaternion);
-
-                // Update controls
-                controls.update();
-
-                // Render the scene
+                // Create a cool moving effect for the camera
+                camera.position.x = Math.sin(time / 2000) * 1.5;
+                camera.position.y = Math.sin(time / 1000) * 0.5;
+                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                camera.lookAt(textMesh.position);
+                
                 renderer.render(scene, camera);
             }
 
-            animate();
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-
-            renderer.setSize(width, height);
+            renderer.setAnimationLoop(animate);
         });
     </script>
 </body>
