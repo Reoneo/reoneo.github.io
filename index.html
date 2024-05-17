@@ -65,7 +65,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
     <script>
-        // Set up scene, camera, and renderer
         const width = window.innerWidth, height = window.innerHeight;
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
@@ -82,9 +81,9 @@
 
         // Load textures
         const loader = new THREE.TextureLoader();
-        const playerTexture = loader.load('path/to/player-texture.png', () => console.log('Player texture loaded'), undefined, (err) => console.error('Error loading player texture', err));
-        const enemyTexture = loader.load('path/to/enemy-texture.png', () => console.log('Enemy texture loaded'), undefined, (err) => console.error('Error loading enemy texture', err));
-        const bulletTexture = loader.load('path/to/bullet-texture.png', () => console.log('Bullet texture loaded'), undefined, (err) => console.error('Error loading bullet texture', err));
+        const playerTexture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg', () => console.log('Player texture loaded'), undefined, (err) => console.error('Error loading player texture', err));
+        const enemyTexture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg', () => console.log('Enemy texture loaded'), undefined, (err) => console.error('Error loading enemy texture', err));
+        const bulletTexture = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg', () => console.log('Bullet texture loaded'), undefined, (err) => console.error('Error loading bullet texture', err));
 
         // Create player
         const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -95,7 +94,6 @@
 
         const enemies = [];
         const bullets = [];
-        const enemyBullets = [];
         let score = 0;
         let level = 1;
         let enemySpeed = 0.02;
@@ -105,13 +103,13 @@
         let enemySpawnInterval = 1000;
 
         const shootSound = new Howl({
-            src: ['path/to/shoot-sound.mp3'],
+            src: ['https://freesound.org/data/previews/67/67583_634166-lq.mp3'],
             onload: () => console.log('Shoot sound loaded'),
             onloaderror: (id, err) => console.error('Error loading shoot sound', err)
         });
 
         const explosionSound = new Howl({
-            src: ['path/to/explosion-sound.mp3'],
+            src: ['https://freesound.org/data/previews/342/342756_634166-lq.mp3'],
             onload: () => console.log('Explosion sound loaded'),
             onloaderror: (id, err) => console.error('Error loading explosion sound', err)
         });
