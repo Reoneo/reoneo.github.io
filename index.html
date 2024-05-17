@@ -54,6 +54,8 @@
         controls.enablePan = false; // Disable panning
         controls.minDistance = 1.5; // Set minimum zoom distance
         controls.maxDistance = 2.5; // Set maximum zoom distance
+        controls.enableDamping = true; // Enable damping (inertia)
+        controls.dampingFactor = 0.05; // Damping inertia factor
 
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
