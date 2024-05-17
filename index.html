@@ -38,13 +38,15 @@
     <script>
         const width = window.innerWidth, height = window.innerHeight;
 
-        // init
+        // Create a scene
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
 
+        // Create a camera
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
+        camera.position.z = 2;
 
+        // Create a renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
@@ -86,11 +88,11 @@
             const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
             scene.add(boxMesh);
 
-            // animation
+            // Animation loop
             function animate(time) {
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
-                
+
                 controls.update();
                 renderer.render(scene, camera);
             }
