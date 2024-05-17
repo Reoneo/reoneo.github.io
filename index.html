@@ -39,11 +39,11 @@
         const width = window.innerWidth, height = window.innerHeight;
 
         // init
-        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 2; // Start further back to allow for zooming in
-
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
+
+        const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+        camera.position.z = 2; // Start further back to allow for zooming in
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
@@ -51,6 +51,13 @@
 
         // Add orbit controls
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Add lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft white light
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(1, 1, 1).normalize();
+        scene.add(directionalLight);
 
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
@@ -67,9 +74,10 @@
                 bevelSegments: 5
             });
 
-            const textMaterial = new THREE.MeshNormalMaterial();
+            textGeometry.center(); // Center the text geometry
+
+            const textMaterial = new THREE.MeshPhongMaterial({ color: 0x0077ff });
             const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textGeometry.center(); // Center the text
             scene.add(textMesh);
 
             // Create a transparent box around the text
@@ -83,6 +91,7 @@
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
                 
+                controls.update();
                 renderer.render(scene, camera);
             }
 
