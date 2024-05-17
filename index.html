@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
     <!-- Include Three.js TextGeometry library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+    <!-- Include OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             margin: 0;
@@ -39,13 +41,16 @@
         // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
         camera.position.z = 2; // Start further back to allow for zooming in
-        
+
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff); // Set background to white
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+
+        // Add orbit controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
         // Load the font and create text geometry
         const loader = new THREE.FontLoader();
@@ -67,21 +72,30 @@
             textGeometry.center(); // Center the text
             scene.add(textMesh);
 
+            // Create a transparent box around the text
+            const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+            const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+            scene.add(boxMesh);
+
             // animation
             function animate(time) {
                 textMesh.rotation.x = time / 2000;
                 textMesh.rotation.y = time / 1000;
-
-                // Create a cool moving effect for the camera
-                camera.position.x = Math.sin(time / 2000) * 1.5;
-                camera.position.y = Math.sin(time / 1000) * 0.5;
-                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
-                camera.lookAt(textMesh.position);
                 
                 renderer.render(scene, camera);
             }
 
             renderer.setAnimationLoop(animate);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
         });
     </script>
 </body>
