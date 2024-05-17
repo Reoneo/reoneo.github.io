@@ -6,13 +6,15 @@
     <title>Vape.₿ox</title>
     <!-- Include Three.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Include OrbitControls -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Include Three.js FontLoader library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
+    <!-- Include Three.js TextGeometry library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #000; /* Set background color */
+            background-color: #fff; /* Set background color */
             font-family: Arial, sans-serif; /* Set font family */
         }
         canvas {
@@ -22,7 +24,9 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
-            color: #fff; /* Set footer text color */
+            font-size: 12px;
+            color: #000; /* Set footer text color to black */
+            z-index: 10; /* Ensure footer appears above everything */
         }
     </style>
 </head>
@@ -30,121 +34,55 @@
     <div id="canvas-wrapper" aria-label="floating"></div>
     <footer>Vape.₿ox</footer>
     <script>
-        // JavaScript code for your Three.js animation
         const width = window.innerWidth, height = window.innerHeight;
 
         // init
         const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
-        camera.position.z = 1;
-
+        camera.position.z = 2; // Start further back to allow for zooming in
+        
         const scene = new THREE.Scene();
-
-        const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-        const material = new THREE.MeshNormalMaterial();
-
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
+        scene.background = new THREE.Color(0xffffff); // Set background to white
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
-        // OrbitControls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Enable damping for smooth controls
-        controls.dampingFactor = 0.05;
-        controls.enableZoom = true; // Allow zooming
-        controls.enableRotate = false; // Disable rotation controls
+        // Load the font and create text geometry
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+            const textGeometry = new THREE.TextGeometry('Vape.Box', {
+                font: font,
+                size: 0.2,
+                height: 0.05,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 0.02,
+                bevelSize: 0.01,
+                bevelOffset: 0,
+                bevelSegments: 5
+            });
 
-        // animation
-        let direction = 1;
-        function animate(time) {
-            // See-saw motion
-            mesh.rotation.x = Math.sin(time / 1000) * 0.1;
-            mesh.rotation.z = Math.sin(time / 1500) * 0.1;
+            const textMaterial = new THREE.MeshNormalMaterial();
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textGeometry.center(); // Center the text
+            scene.add(textMesh);
 
-            controls.update(); // Update controls
+            // animation
+            function animate(time) {
+                textMesh.rotation.x = time / 2000;
+                textMesh.rotation.y = time / 1000;
 
-            renderer.render(scene, camera);
-        }
+                // Create a cool moving effect for the camera
+                camera.position.x = Math.sin(time / 2000) * 1.5;
+                camera.position.y = Math.sin(time / 1000) * 0.5;
+                camera.position.z = 1.5 + Math.sin(time / 3000) * 0.5; // Zoom in and out
+                camera.lookAt(textMesh.position);
+                
+                renderer.render(scene, camera);
+            }
 
-        renderer.setAnimationLoop(animate);
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-
-            renderer.setSize(width, height);
+            renderer.setAnimationLoop(animate);
         });
-
-        // Handle swipe events
-        let startX, startY, endX, endY;
-
-        document.addEventListener('touchstart', function(e) {
-            startX = e.changedTouches[0].screenX;
-            startY = e.changedTouches[0].screenY;
-        }, false);
-
-        document.addEventListener('touchend', function(e) {
-            endX = e.changedTouches[0].screenX;
-            endY = e.changedTouches[0].screenY;
-            handleSwipe();
-        }, false);
-
-        function handleSwipe() {
-            const dx = endX - startX;
-            const dy = endY - startY;
-
-            if (Math.abs(dx) > Math.abs(dy)) {
-                // Horizontal swipe
-                if (dx > 0) {
-                    // Swipe right
-                    changeCameraAngle('right');
-                } else {
-                    // Swipe left
-                    changeCameraAngle('left');
-                }
-            } else {
-                // Vertical swipe
-                if (dy > 0) {
-                    // Swipe down
-                    changeCameraAngle('down');
-                } else {
-                    // Swipe up
-                    changeCameraAngle('up');
-                }
-            }
-        }
-
-        function changeCameraAngle(direction) {
-            const angle = Math.PI / 2; // 90 degrees in radians
-            const distanceChange = Math.random() * 0.5 + 0.5; // Random distance change
-
-            switch (direction) {
-                case 'right':
-                    camera.position.x += distanceChange;
-                    break;
-                case 'left':
-                    camera.position.x -= distanceChange;
-                    break;
-                case 'up':
-                    camera.position.y += distanceChange;
-                    break;
-                case 'down':
-                    camera.position.y -= distanceChange;
-                    break;
-            }
-
-            // Rotate the camera by 90 degrees in a random direction
-            const randomAxis = new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize();
-            const quaternion = new THREE.Quaternion().setFromAxisAngle(randomAxis, angle);
-            camera.position.applyQuaternion(quaternion);
-            camera.lookAt(scene.position);
-        }
     </script>
 </body>
 </html>
