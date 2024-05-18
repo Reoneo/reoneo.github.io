@@ -98,7 +98,10 @@
                 const colors = [
                     new THREE.Color(0xff0000), // Red
                     new THREE.Color(0x00ff00), // Green
-                    new THREE.Color(0x0000ff)  // Blue
+                    new THREE.Color(0x0000ff), // Blue
+                    new THREE.Color(0xffff00), // Yellow
+                    new THREE.Color(0xff00ff), // Magenta
+                    new THREE.Color(0x00ffff)  // Cyan
                 ];
                 let colorIndex1 = 0;
                 let colorIndex2 = 1;
@@ -110,7 +113,7 @@
                     requestAnimationFrame(animate);
 
                     // Update the color factor
-                    colorFactor += 0.01;
+                    colorFactor += 0.002; // Slow down the color change
                     if (colorFactor >= 1) {
                         colorFactor = 0;
                         colorIndex1 = nextColorIndex1;
@@ -127,8 +130,10 @@
                         if (child.isMesh) {
                             child.material.color.set(currentColor1);
                             // Apply second color to some parts if the model has multiple materials
-                            if (child.material.length > 1) {
-                                child.material[1].color.set(currentColor2);
+                            if (Array.isArray(child.material)) {
+                                child.material.forEach((material, index) => {
+                                    material.color.set(index % 2 === 0 ? currentColor1 : currentColor2);
+                                });
                             }
                         }
                     });
