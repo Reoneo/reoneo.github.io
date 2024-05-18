@@ -1,146 +1,143 @@
-{
-  "accessors": [
-    {
-      "bufferView": 1,
-      "componentType": 5126,
-      "count": 15493,
-      "max": [
-        34.835453033447266,
-        65.30745697021484,
-        16.735454559326172
-      ],
-      "min": [
-        0.035453587770462036,
-        0.009094364941120148,
-        0.03545451909303665
-      ],
-      "type": "VEC3"
-    },
-    {
-      "bufferView": 1,
-      "byteOffset": 185916,
-      "componentType": 5126,
-      "count": 15493,
-      "max": [
-        1.0,
-        1.0,
-        1.0
-      ],
-      "min": [
-        -1.0,
-        -1.0,
-        -1.0
-      ],
-      "type": "VEC3"
-    },
-    {
-      "bufferView": 0,
-      "componentType": 5125,
-      "count": 73086,
-      "type": "SCALAR"
-    }
-  ],
-  "asset": {
-    "extras": {
-      "author": "TheBanditOfRed (https://sketchfab.com/TheBanditOfRed)",
-      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
-      "source": "https://sketchfab.com/3d-models/elf-bar-lost-mary-bm600-271afe34dae143218c1a616c1acc0e94",
-      "title": "Elf Bar Lost Mary BM600"
-    },
-    "generator": "Sketchfab-15.3.0",
-    "version": "2.0"
-  },
-  "bufferViews": [
-    {
-      "buffer": 0,
-      "byteLength": 292344,
-      "name": "floatBufferViews",
-      "target": 34963
-    },
-    {
-      "buffer": 0,
-      "byteLength": 371832,
-      "byteOffset": 292344,
-      "byteStride": 12,
-      "name": "floatBufferViews",
-      "target": 34962
-    }
-  ],
-  "buffers": [
-    {
-      "byteLength": 664176,
-      "uri": "scene.bin"
-    }
-  ],
-  "materials": [
-    {
-      "doubleSided": true,
-      "name": "Scene_-_Root",
-      "pbrMetallicRoughness": {
-        "metallicFactor": 0.0,
-        "roughnessFactor": 0.6
-      }
-    }
-  ],
-  "meshes": [
-    {
-      "name": "Object_0",
-      "primitives": [
-        {
-          "attributes": {
-            "NORMAL": 1,
-            "POSITION": 0
-          },
-          "indices": 2,
-          "material": 0,
-          "mode": 4
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLTF Model Viewer</title>
+    <style>
+        body, html {
+            margin: 0;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
         }
-      ]
-    }
-  ],
-  "nodes": [
-    {
-      "children": [
-        1
-      ],
-      "matrix": [
-        0.00277704861946404,
-        -4.465834710013651e-19,
-        -4.465834710013653e-19,
-        0.0,
-        4.465834710013652e-19,
-        0.00277704861946404,
-        0.0,
-        0.0,
-        4.465834710013652e-19,
-        0.0,
-        0.00277704861946404,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "name": "Sketchfab_model"
-    },
-    {
-      "children": [
-        2
-      ],
-      "name": "1lost_mary_complete.STL.cleaner.materialmerger.gles"
-    },
-    {
-      "mesh": 0,
-      "name": "Object_2"
-    }
-  ],
-  "scene": 0,
-  "scenes": [
-    {
-      "name": "Sketchfab_Scene",
-      "nodes": [
-        0
-      ]
-    }
-  ]
-}
+        #container {
+            width: 100%;
+            height: 100%;
+        }
+        .footer-image {
+            position: absolute;
+            bottom: 20px;
+            width: 30px;
+            height: 30px;
+            z-index: 10;
+        }
+        #footer-image { left: 20px; }
+        #second-footer-image { left: 60px; }
+        #third-footer-image { left: 100px; }
+        #fourth-footer-image { left: 140px; }
+        #fifth-footer-image { left: 180px; }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <a id="footer-link" href="tel:+447783485026" target="_blank">
+        <img id="footer-image" class="footer-image" src="https://i.imgur.com/M7kZY08.jpeg" alt="Footer Image 1">
+    </a>
+    <a id="second-footer-link" href="mailto:reon@vape.box" target="_blank">
+        <img id="second-footer-image" class="footer-image" src="https://i.imgur.com/zPRCBm8.jpeg" alt="Footer Image 2">
+    </a>
+    <a id="third-footer-link" href="https://x.com/prettyulgy?t=gFx7-kYNxXR9Bkwj1o1pLg&s=09" target="_blank">
+        <img id="third-footer-image" class="footer-image" src="https://i.imgur.com/HF0wf4y.jpeg" alt="Footer Image 3">
+    </a>
+    <a id="fourth-footer-link" href="https://www.linkedin.com/in/reon-franklyn-7a5733133" target="_blank">
+        <img id="fourth-footer-image" class="footer-image" src="https://i.imgur.com/gVYNsej.jpeg" alt="Footer Image 4">
+    </a>
+    <a id="fifth-footer-link" href="https://opensea.io/vape.box" target="_blank">
+        <img id="fifth-footer-image" class="footer-image" src="https://i.imgur.com/waCSGHA.jpeg" alt="Footer Image 5">
+    </a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        const container = document.getElementById('container');
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff); // Set scene background to white
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.screenSpacePanning = false;
+        controls.maxPolarAngle = Math.PI / 2;
+
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(5, 5, 5).normalize();
+        scene.add(light);
+
+        const loader = new THREE.GLTFLoader();
+        loader.load(
+            'https://raw.githubusercontent.com/Reoneo/reoneo.github.io/main/scene.gltf',
+            function (gltf) {
+                const model = gltf.scene;
+                scene.add(model);
+
+                // Center the model
+                const box = new THREE.Box3().setFromObject(model);
+                const size = box.getSize(new THREE.Vector3()).length();
+                const center = box.getCenter(new THREE.Vector3());
+
+                model.position.x += (model.position.x - center.x);
+                model.position.y += (model.position.y - center.y);
+                model.position.z += (model.position.z - center.z);
+
+                camera.near = size / 100;
+                camera.far = size * 100;
+                camera.position.set(size, size, size);
+                camera.lookAt(center);
+
+                // Colors for interpolation: red, green, blue
+                const colors = [
+                    new THREE.Color(0xff0000), // Red
+                    new THREE.Color(0x00ff00), // Green
+                    new THREE.Color(0x0000ff)  // Blue
+                ];
+                let colorIndex = 0;
+                let nextColorIndex = 1;
+                let colorFactor = 0;
+
+                const animate = function () {
+                    requestAnimationFrame(animate);
+
+                    // Update the color factor
+                    colorFactor += 0.01;
+                    if (colorFactor >= 1) {
+                        colorFactor = 0;
+                        colorIndex = nextColorIndex;
+                        nextColorIndex = (nextColorIndex + 1) % colors.length;
+                    }
+
+                    // Interpolate and apply the color
+                    const currentColor = colors[colorIndex].clone().lerp(colors[nextColorIndex], colorFactor);
+                    model.traverse(function (child) {
+                        if (child.isMesh) {
+                            child.material.color.set(currentColor);
+                        }
+                    });
+
+                    controls.update();
+                    renderer.render(scene, camera);
+                };
+                animate();
+            },
+            undefined,
+            function (error) {
+                console.error(error);
+            }
+        );
+
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
