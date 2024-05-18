@@ -20,20 +20,46 @@
         canvas {
             display: block;
         }
-        #footer-image {
+        .footer-image {
             position: absolute;
             bottom: 20px;
-            left: 20px;
             width: 30px; /* Adjusted size */
             height: 30px; /* Adjusted size */
             z-index: 10; /* Ensure footer appears above everything */
+        }
+        #footer-image {
+            left: 20px;
+        }
+        #second-footer-image {
+            left: 60px;
+        }
+        #third-footer-image {
+            left: 100px;
+        }
+        #fourth-footer-image {
+            left: 140px;
+        }
+        #fifth-footer-image {
+            left: 180px;
         }
     </style>
 </head>
 <body>
     <div id="canvas-wrapper" aria-label="floating"></div>
     <a id="footer-link" href="https://x.com/prettyulgy?t=gFx7-kYNxXR9Bkwj1o1pLg&s=09" target="_blank">
-        <img id="footer-image" src="https://imgs.search.brave.com/LXvqCdGG_3hdMxsJQbeCtZcCseEiPVOSkVdwnsV6WJo/rs:fit:500:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi9jL2NlL1hf/bG9nb18yMDIzLnN2/Zy8yMjBweC1YX2xv/Z29fMjAyMy5zdmcu/cG5n" alt="Footer Image">
+        <img id="footer-image" class="footer-image" src="https://i.imgur.com/HF0wf4y.jpeg" alt="Footer Image 1">
+    </a>
+    <a id="second-footer-link" href="https://www.opensea.io/vape.box" target="_blank">
+        <img id="second-footer-image" class="footer-image" src="https://i.imgur.com/gN5RKBf.jpeg" alt="Footer Image 2">
+    </a>
+    <a id="third-footer-link" href="mailto:reon@vape.box" target="_blank">
+        <img id="third-footer-image" class="footer-image" src="https://i.imgur.com/zPRCBm8.jpeg" alt="Footer Image 3">
+    </a>
+    <a id="fourth-footer-link" href="https://www.linkedin.com/in/reon-franklyn-7a5733133" target="_blank">
+        <img id="fourth-footer-image" class="footer-image" src="https://i.imgur.com/gVYNsej.jpeg" alt="Footer Image 4">
+    </a>
+    <a id="fifth-footer-link" href="tel:+447783485026" target="_blank">
+        <img id="fifth-footer-image" class="footer-image" src="https://i.imgur.com/M7kZY08.jpeg" alt="Footer Image 5">
     </a>
     <script>
         // Ensure footer loads first
