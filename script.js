@@ -107,13 +107,15 @@ window.addEventListener('load', function () {
             document.getElementById('loading-screen').style.display = 'none';
         }, 500); // Match the transition duration
     }, 500);
-});
 
-// Menu button functionality
-const menuButton = document.getElementById('menu-button');
-const menuOverlay = document.getElementById('menu-overlay');
+    // Load the menu button 0.5 seconds after the page loads
+    setTimeout(function () {
+        const menuButton = document.getElementById('menu-button');
+        const menuOverlay = document.getElementById('menu-overlay');
 
-menuButton.addEventListener('click', function () {
-    menuButton.classList.toggle('active');
-    menuOverlay.classList.toggle('active');
+        menuButton.addEventListener('click', function () {
+            menuButton.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        });
+    }, 500);
 });
