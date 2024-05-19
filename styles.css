@@ -72,8 +72,8 @@ body, html {
     top: 20px;
     right: 20px;
     z-index: 4;
-    width: 40px;
-    height: 30px;
+    width: 30px;
+    height: 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -84,10 +84,10 @@ body, html {
 
 #menu-button div {
     width: 100%;
-    height: 4px;
+    height: 3px;
     background-color: black;
-    transition: all 0.3s;
-    position: relative;
+    transition: all 0.3s ease;
+    transform-origin: center;
 }
 
 #menu-button div:nth-child(1) {
@@ -99,7 +99,7 @@ body, html {
 }
 
 #menu-button.active div:nth-child(1) {
-    transform: rotate(45deg) translateY(-2px);
+    transform: rotate(45deg) translate(5px, 5px);
 }
 
 #menu-button.active div:nth-child(2) {
@@ -107,7 +107,7 @@ body, html {
 }
 
 #menu-button.active div:nth-child(3) {
-    transform: rotate(-45deg) translateY(2px);
+    transform: rotate(-45deg) translate(5px, -5px);
 }
 
 #menu-overlay {
