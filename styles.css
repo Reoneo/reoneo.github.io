@@ -73,7 +73,7 @@ body, html {
     right: 20px;
     z-index: 4;
     width: 40px;
-    height: 24px;
+    height: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -82,23 +82,32 @@ body, html {
     transition: opacity 0.5s ease;
 }
 
-.line {
+#menu-button div {
     width: 100%;
     height: 4px;
     background-color: black;
     transition: all 0.3s;
+    position: relative;
 }
 
-.menu-button.active .line1 {
-    transform: rotate(45deg) translate(5px, 5px);
+#menu-button div:nth-child(1) {
+    transform-origin: top left;
 }
 
-.menu-button.active .line2 {
+#menu-button div:nth-child(3) {
+    transform-origin: bottom left;
+}
+
+#menu-button.active div:nth-child(1) {
+    transform: rotate(45deg) translateY(-2px);
+}
+
+#menu-button.active div:nth-child(2) {
     opacity: 0;
 }
 
-.menu-button.active .line3 {
-    transform: rotate(-45deg) translate(5px, -5px);
+#menu-button.active div:nth-child(3) {
+    transform: rotate(-45deg) translateY(2px);
 }
 
 #menu-overlay {
