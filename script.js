@@ -99,10 +99,11 @@ window.addEventListener('resize', function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Fade out the loading screen after 0.5 seconds
+// Fade out the loading screen after 0.5 seconds and show the menu button
 window.addEventListener('load', function () {
     setTimeout(function () {
         document.getElementById('loading-screen').style.opacity = '0';
+        document.getElementById('menu-button').style.opacity = '1';
         setTimeout(function () {
             document.getElementById('loading-screen').style.display = 'none';
         }, 500); // Match the transition duration
