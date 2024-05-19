@@ -119,7 +119,7 @@ menuButton.addEventListener('click', function () {
     menuOverlay.classList.toggle('active');
 
     const isActive = menuButton.classList.contains('active');
-    menuButton.querySelectorAll('.line').forEach(div => {
-        div.style.backgroundColor = isActive ? 'white' : 'black';
+    menuButton.querySelectorAll('.menu-line').forEach(line => {
+        line.style.backgroundColor = isActive ? 'white' : 'black';
     });
 });
