@@ -117,4 +117,9 @@ const menuOverlay = document.getElementById('menu-overlay');
 menuButton.addEventListener('click', function () {
     menuButton.classList.toggle('active');
     menuOverlay.classList.toggle('active');
+
+    const isActive = menuButton.classList.contains('active');
+    menuButton.querySelectorAll('div').forEach(div => {
+        div.style.backgroundColor = isActive ? 'white' : 'black';
+    });
 });
