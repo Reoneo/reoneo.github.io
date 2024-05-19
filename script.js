@@ -54,3 +54,66 @@ loader.load(
         let colorFactor = 0;
 
         const animate = function () {
+            requestAnimationFrame(animate);
+
+            // Update the color factor
+            colorFactor += 0.002; // Slow down the color change
+            if (colorFactor >= 1) {
+                colorFactor = 0;
+                colorIndex1 = nextColorIndex1;
+                colorIndex2 = nextColorIndex2;
+                nextColorIndex1 = (nextColorIndex1 + 1) % colors.length;
+                nextColorIndex2 = (nextColorIndex2 + 1) % colors.length;
+            }
+
+            // Interpolate and apply the colors
+            const currentColor1 = colors[colorIndex1].clone().lerp(colors[nextColorIndex1], colorFactor);
+            const currentColor2 = colors[colorIndex2].clone().lerp(colors[nextColorIndex2], colorFactor);
+
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.material.color.set(currentColor1);
+                    // Apply second color to some parts if the model has multiple materials
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach((material, index) => {
+                            material.color.set(index % 2 === 0 ? currentColor1 : currentColor2);
+                        });
+                    }
+                }
+            });
+
+            controls.update();
+            renderer.render(scene, camera);
+        };
+        animate();
+    },
+    undefined,
+    function (error) {
+        console.error(error);
+    }
+);
+
+window.addEventListener('resize', function () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Fade out the loading screen after 0.5 seconds
+window.addEventListener('load', function () {
+    setTimeout(function () {
+        document.getElementById('loading-screen').style.opacity = '0';
+        setTimeout(function () {
+            document.getElementById('loading-screen').style.display = 'none';
+        }, 500); // Match the transition duration
+    }, 500);
+});
+
+// Menu button functionality
+const menuButton = document.getElementById('menu-button');
+const menuOverlay = document.getElementById('menu-overlay');
+
+menuButton.addEventListener('click', function () {
+    menuButton.classList.toggle('active');
+    menuOverlay.classList.toggle('active');
+});
