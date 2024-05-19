@@ -113,8 +113,6 @@ window.addEventListener('load', function () {
         const menuButton = document.getElementById('menu-button');
         const menuOverlay = document.getElementById('menu-overlay');
 
-        menuButton.style.opacity = '1'; // Make the menu button visible
-
         menuButton.addEventListener('click', function () {
             menuButton.classList.toggle('active');
             menuOverlay.classList.toggle('active');
