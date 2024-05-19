@@ -117,13 +117,11 @@ body, html {
 #menu-button.active div::before {
     top: 0;
     transform: rotate(45deg);
-    background-color: white;
 }
 
 #menu-button.active div::after {
     bottom: 0;
     transform: rotate(-45deg);
-    background-color: white;
 }
 
 #menu-overlay {
