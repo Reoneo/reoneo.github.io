@@ -108,3 +108,12 @@ window.addEventListener('load', function () {
         }, 500); // Match the transition duration
     }, 500);
 });
+
+// Menu button functionality
+const menuButton = document.getElementById('menu-button');
+const menuOverlay = document.getElementById('menu-overlay');
+
+menuButton.addEventListener('click', function () {
+    menuButton.classList.toggle('active');
+    menuOverlay.classList.toggle('active');
+});
