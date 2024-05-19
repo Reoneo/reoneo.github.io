@@ -95,3 +95,29 @@ body, html {
 
 #menu-button.active div::before {
     top: 0;
+    transform: rotate(45deg);
+}
+
+#menu-button.active div::after {
+    bottom: 0;
+    transform: rotate(-45deg);
+}
+
+#menu-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 3;
+}
+
+#menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
