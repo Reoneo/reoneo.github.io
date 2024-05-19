@@ -126,10 +126,10 @@ body, html {
 
 #menu-overlay {
     position: fixed;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 15px;
     opacity: 0;
