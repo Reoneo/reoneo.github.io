@@ -80,6 +80,8 @@ body, html {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 #menu-button div {
