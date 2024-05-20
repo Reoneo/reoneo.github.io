@@ -107,6 +107,11 @@ window.addEventListener('load', function () {
             document.getElementById('loading-screen').style.display = 'none';
         }, 500); // Match the transition duration
     }, 500);
+
+    // Delay the appearance of the menu button by 0.5 seconds
+    setTimeout(function () {
+        document.getElementById('menu-button').style.opacity = '1';
+    }, 500);
 });
 
 // Menu button functionality
