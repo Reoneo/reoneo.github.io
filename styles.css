@@ -185,23 +185,29 @@ body, html {
 
 /* Contact Section Styles */
 #contact-section {
-    background-color: #d3d3d3; /* Lighter grey */
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
-.contact-popup {
-    background-color: #808080; /* Grey same as Spotify player */
-    padding: 10px;
-    border-radius: 5px;
+.contact-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
 }
 
 .contact-content h2 {
     font-size: 16px; /* Adjust size to match Spotify player text */
+    margin: 0;
 }
 
 .contact-content img {
-    width: 50px; /* Adjust size as needed */
-    height: 50px; /* Adjust size as needed */
-    margin-right: 10px;
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    margin: 5px;
+}
+
+.contact-content p {
+    margin: 5px 0;
 }
