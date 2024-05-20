@@ -105,12 +105,12 @@ window.addEventListener('load', function () {
         document.getElementById('loading-screen').style.opacity = '0';
         setTimeout(function () {
             document.getElementById('loading-screen').style.display = 'none';
+            
+            // Delay the appearance of the menu button by 0.5 seconds
+            setTimeout(function () {
+                document.getElementById('menu-button').style.opacity = '1';
+            }, 500);
         }, 500); // Match the transition duration
-    }, 500);
-
-    // Delay the appearance of the menu button by 0.5 seconds
-    setTimeout(function () {
-        document.getElementById('menu-button').style.opacity = '1';
     }, 500);
 });
 
