@@ -136,70 +136,9 @@ body, html {
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 3;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
 }
 
 #menu-overlay.active {
     opacity: 1;
     visibility: visible;
-}
-
-#menu-overlay .menu-content {
-    flex: 1; /* Takes up the remaining space */
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#menu-overlay iframe {
-    width: 100%;
-    max-width: 300px;
-    height: 80px;
-    border: none;
-    margin-bottom: 10px; /* Add some margin if needed */
-}
-
-#close-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-#close-button div {
-    width: 20px;
-    height: 2px;
-    background-color: white;
-    position: relative;
-}
-
-#close-button div::before,
-#close-button div::after {
-    content: '';
-    width: 20px;
-    height: 2px;
-    background-color: white;
-    position: absolute;
-}
-
-#close-button div::before {
-    top: -6px;
-    transform: rotate(45deg);
-}
-
-#close-button div::after {
-    bottom: -6px;
-    transform: rotate(-45deg);
 }
