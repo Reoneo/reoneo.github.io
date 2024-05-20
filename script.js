@@ -22,6 +22,9 @@ const lightBottom = new THREE.DirectionalLight(0xffffff, 1);
 lightBottom.position.set(0, -10, 0); // Position light directly below
 scene.add(lightBottom);
 
+const ambientLight = new THREE.AmbientLight(0x404040, 1.5); // Ambient light for general illumination
+scene.add(ambientLight);
+
 const loader = new THREE.GLTFLoader();
 loader.load(
     'https://raw.githubusercontent.com/Reoneo/reoneo.github.io/main/scene.gltf',
