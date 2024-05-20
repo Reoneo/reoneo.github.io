@@ -119,11 +119,40 @@ menuButton.addEventListener('click', function () {
 });
 
 // Chatbot functionality
-const apiKey = '6780567068:AAFaU-4bqcW5DgjWVwQZDw06IvR_FaeSbYg'; // Replace with your actual ChatGPT API key
+const apiKey = 'YOUR_API_KEY'; // Replace with your actual ChatGPT API key
 
+const chatbotPopup = document.getElementById('chatbot-popup');
 const chatbotMessages = document.getElementById('chatbot-messages');
 const chatbotInput = document.getElementById('chatbot-input');
 const chatbotSend = document.getElementById('chatbot-send');
+const openChatbotButton = document.getElementById('open-chatbot');
+const minimizeChatbotButton = document.getElementById('minimize-chatbot');
+const closeChatbotButton = document.getElementById('close-chatbot');
+
+// Open the chatbot popup
+openChatbotButton.addEventListener('click', () => {
+    chatbotPopup.style.display = 'flex';
+    openChatbotButton.style.display = 'none';
+});
+
+// Minimize the chatbot popup
+minimizeChatbotButton.addEventListener('click', () => {
+    if (chatbotMessages.style.display === 'none') {
+        chatbotMessages.style.display = 'block';
+        chatbotInput.style.display = 'block';
+        chatbotSend.style.display = 'block';
+    } else {
+        chatbotMessages.style.display = 'none';
+        chatbotInput.style.display = 'none';
+        chatbotSend.style.display = 'none';
+    }
+});
+
+// Close the chatbot popup
+closeChatbotButton.addEventListener('click', () => {
+    chatbotPopup.style.display = 'none';
+    openChatbotButton.style.display = 'block';
+});
 
 chatbotSend.addEventListener('click', sendMessage);
 chatbotInput.addEventListener('keypress', function (e) {
