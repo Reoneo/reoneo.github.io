@@ -13,9 +13,14 @@ controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
 controls.maxPolarAngle = Math.PI; // Allow full rotation
 
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(0, 10, 0); // Position light directly above
-scene.add(light);
+// Add lights
+const lightTop = new THREE.DirectionalLight(0xffffff, 1);
+lightTop.position.set(0, 10, 0); // Position light directly above
+scene.add(lightTop);
+
+const lightBottom = new THREE.DirectionalLight(0xffffff, 1);
+lightBottom.position.set(0, -10, 0); // Position light directly below
+scene.add(lightBottom);
 
 const loader = new THREE.GLTFLoader();
 loader.load(
@@ -72,13 +77,29 @@ loader.load(
 
             model.traverse(function (child) {
                 if (child.isMesh) {
+                    // Apply top color
                     child.material.color.set(currentColor1);
+                    // Calculate the inverted color for the bottom
+                    const invertedColor = new THREE.Color(1 - currentColor1.r, 1 - currentColor1.g, 1 - currentColor1.b);
                     // Apply second color to some parts if the model has multiple materials
                     if (Array.isArray(child.material)) {
                         child.material.forEach((material, index) => {
-                            material.color.set(index % 2 === 0 ? currentColor1 : currentColor2);
+                            material.color.set(index % 2 === 0 ? currentColor1 : invertedColor);
                         });
                     }
+                    // Apply gradient from top to bottom
+                    child.geometry.computeBoundingBox();
+                    const bbox = child.geometry.boundingBox;
+                    const yRange = bbox.max.y - bbox.min.y;
+                    const gradient = new THREE.Vector3(0, 1 / yRange, 0);
+
+                    for (let i = 0; i < child.geometry.attributes.position.count; i++) {
+                        const vertex = new THREE.Vector3().fromBufferAttribute(child.geometry.attributes.position, i);
+                        const color = currentColor1.clone().lerp(invertedColor, (vertex.y - bbox.min.y) / yRange);
+                        child.geometry.attributes.color.setXYZ(i, color.r, color.g, color.b);
+                    }
+
+                    child.geometry.attributes.color.needsUpdate = true;
                 }
             });
 
