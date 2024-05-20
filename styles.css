@@ -200,13 +200,23 @@ body, html {
 .contact-content h2 {
     font-size: 16px; /* Adjust size to match Spotify player text */
     margin: 0;
+    padding-bottom: 10px; /* Move the contact title slightly lower */
 }
 
 .contact-images {
     display: flex;
     justify-content: space-between;
-    width: 140px; /* Adjust as needed for proper spacing */
-    margin: 10px 0; /* Adjust spacing between images and Spotify player */
+    width: 120px; /* Adjust as needed for proper spacing */
+    margin: 5px 0; /* Adjust spacing between images and Spotify player */
+}
+
+.contact-content a {
+    display: flex;
+    align-items: center;
+}
+
+.contact-content a:last-child {
+    margin-top: 5px; /* Move the second image slightly lower */
 }
 
 .contact-content img {
