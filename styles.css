@@ -182,3 +182,26 @@ body, html {
     cursor: pointer;
     font-size: 16px;
 }
+
+/* Contact Section Styles */
+#contact-section {
+    background-color: #d3d3d3; /* Lighter grey */
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.contact-popup {
+    background-color: #808080; /* Grey same as Spotify player */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.contact-content h2 {
+    font-size: 16px; /* Adjust size to match Spotify player text */
+}
+
+.contact-content img {
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    margin-right: 10px;
+}
