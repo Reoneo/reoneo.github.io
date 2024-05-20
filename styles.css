@@ -1,6 +1,8 @@
 body, html {
     margin: 0;
+    padding: 0;
     overflow: hidden;
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -33,6 +35,8 @@ body, html {
     z-index: 2;
     display: flex;
     justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .footer-image {
@@ -51,6 +55,8 @@ body, html {
     color: #000;
     text-align: center;
     white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 #loading-screen {
