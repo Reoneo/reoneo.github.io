@@ -1,23 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if the age popup has been shown before
-    if (!localStorage.getItem('ageVerified')) {
-        // Show the age popup
-        document.getElementById('age-popup').style.display = 'flex';
-
-        // Handle the Yes button click
-        document.getElementById('yes-button').addEventListener('click', function() {
-            localStorage.setItem('ageVerified', 'true');
-            document.getElementById('age-popup').style.display = 'none';
-        });
-
-        // Handle the No button click
-        document.getElementById('no-button').addEventListener('click', function() {
-            window.location.href = 'https://www.google.com';
-        });
-    }
-});
-
-// Existing Three.js script
 const container = document.getElementById('container');
 
 const scene = new THREE.Scene();
