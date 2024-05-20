@@ -204,7 +204,9 @@ body, html {
 
 .contact-images {
     display: flex;
-    gap: 20px; /* Gap between the images */
+    justify-content: space-between;
+    width: 160px; /* Adjust as needed for proper spacing */
+    margin: 10px 0; /* Adjust spacing between images and Spotify player */
 }
 
 .contact-content img {
