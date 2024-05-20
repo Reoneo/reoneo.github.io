@@ -1,147 +1,124 @@
-body, html {
-    margin: 0;
-    overflow: hidden;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fff;
-}
+const container = document.getElementById('container');
 
-#video-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-}
+const scene = new THREE.Scene();
+scene.background = null; // Ensure the background is transparent
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Enable alpha for transparency
+renderer.setSize(window.innerWidth, window.innerHeight);
+container.appendChild(renderer.domElement);
 
-#container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    z-index: 1;
-}
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.screenSpacePanning = false;
+controls.maxPolarAngle = Math.PI; // Allow full rotation
 
-.footer-images {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-}
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(0, 10, 0); // Position light directly above
+scene.add(light);
 
-.footer-image {
-    width: 30px;
-    height: 30px;
-    margin: 0 10px;
-}
+const loader = new THREE.GLTFLoader();
+loader.load(
+    'https://raw.githubusercontent.com/Reoneo/reoneo.github.io/main/scene.gltf',
+    function (gltf) {
+        const model = gltf.scene;
+        scene.add(model);
 
-#footer-text {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    font-size: 12px;
-    color: #000;
-    text-align: center;
-    white-space: nowrap;
-}
+        // Center the model
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3()).length();
+        const center = box.getCenter(new THREE.Vector3());
 
-#loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    z-index: 3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.5s ease;
-}
+        model.position.x += (model.position.x - center.x);
+        model.position.y += (model.position.y - center.y);
+        model.position.z += (model.position.z - center.z);
 
-#menu-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 4;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
+        camera.near = size / 100;
+        camera.far = size * 100;
+        camera.position.set(size, size, size);
+        camera.lookAt(center);
 
-#menu-button div {
-    width: 20px;
-    height: 2px;
-    background-color: white;
-    position: relative;
-    transition: all 0.3s;
-}
+        // Colors for interpolation
+        const colors = [
+            new THREE.Color(0xff0000), // Red
+            new THREE.Color(0x00ff00), // Green
+            new THREE.Color(0x0000ff), // Blue
+            new THREE.Color(0xffff00), // Yellow
+            new THREE.Color(0xff00ff), // Magenta
+            new THREE.Color(0x00ffff)  // Cyan
+        ];
+        let colorIndex1 = 0;
+        let colorIndex2 = 1;
+        let nextColorIndex1 = 1;
+        let nextColorIndex2 = 2;
+        let colorFactor = 0;
 
-#menu-button div::before,
-#menu-button div::after {
-    content: '';
-    width: 20px;
-    height: 2px;
-    background-color: white;
-    position: absolute;
-    transition: all 0.3s;
-}
+        const animate = function () {
+            requestAnimationFrame(animate);
 
-#menu-button div::before {
-    top: -6px;
-}
+            // Update the color factor
+            colorFactor += 0.002; // Slow down the color change
+            if (colorFactor >= 1) {
+                colorFactor = 0;
+                colorIndex1 = nextColorIndex1;
+                colorIndex2 = nextColorIndex2;
+                nextColorIndex1 = (nextColorIndex1 + 1) % colors.length;
+                nextColorIndex2 = (nextColorIndex2 + 1) % colors.length;
+            }
 
-#menu-button div::after {
-    bottom: -6px;
-}
+            // Interpolate and apply the colors
+            const currentColor1 = colors[colorIndex1].clone().lerp(colors[nextColorIndex1], colorFactor);
+            const currentColor2 = colors[colorIndex2].clone().lerp(colors[nextColorIndex2], colorFactor);
 
-#menu-button.active div {
-    background-color: transparent;
-}
+            model.traverse(function (child) {
+                if (child.isMesh) {
+                    child.material.color.set(currentColor1);
+                    // Apply second color to some parts if the model has multiple materials
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach((material, index) => {
+                            material.color.set(index % 2 === 0 ? currentColor1 : currentColor2);
+                        });
+                    }
+                }
+            });
 
-#menu-button.active div::before {
-    top: 0;
-    transform: rotate(45deg);
-}
+            controls.update();
+            renderer.render(scene, camera);
+        };
+        animate();
+    },
+    undefined,
+    function (error) {
+        console.error(error);
+    }
+);
 
-#menu-button.active div::after {
-    bottom: 0;
-    transform: rotate(-45deg);
-}
+window.addEventListener('resize', function () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-#menu-overlay {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
-    background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 15px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-}
+// Fade out the loading screen after 0.5 seconds
+window.addEventListener('load', function () {
+    setTimeout(function () {
+        document.getElementById('loading-screen').style.opacity = '0';
+        setTimeout(function () {
+            document.getElementById('loading-screen').style.display = 'none';
+            
+            // Delay the appearance of the menu button by 0.5 seconds
+            setTimeout(function () {
+                document.getElementById('menu-button').style.opacity = '1';
+            }, 500);
+        }, 500); // Match the transition duration
+    }, 500);
+});
 
-#menu-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
+// Menu button functionality
+const menuButton = document.getElementById('menu-button');
+const menuOverlay = document.getElementById('menu-overlay');
+
+menuButton.addEventListener('click', function () {
+    menuButton.classList.toggle('active');
+    menuOverlay.classList.toggle('active');
+});
