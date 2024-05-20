@@ -117,5 +117,3 @@ menuButton.addEventListener('click', function () {
     menuButton.classList.toggle('active');
     menuOverlay.classList.toggle('active');
 });
-
-Load the menu button 0.5 seconds after the page loads 
