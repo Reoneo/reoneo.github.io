@@ -48,5 +48,220 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="script.js"></script>
+
+    <!-- Chatbot elements -->
+    <div id="chatbot-popup">
+        <div id="chatbot-header">
+            <span>Chatbot</span>
+            <button id="minimize-chatbot">-</button>
+            <button id="close-chatbot">x</button>
+        </div>
+        <div id="chatbot-content">
+            <div id="chatbot-messages"></div>
+            <div id="chatbot-input-area">
+                <input id="chatbot-input" type="text" placeholder="Type your message here...">
+                <button id="chatbot-send">Send</button>
+            </div>
+            <!-- Embed Spotify playlist -->
+            <iframe src="https://open.spotify.com/embed/playlist/473sW1qQe11yNw1SnDWExq?si=jmPQp1kyQp2T725xlCNHpQ" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        </div>
+    </div>
+    <button id="open-chatbot">Chat</button>
 </body>
 </html>
+
+<!-- CSS Styles -->
+<style>
+body, html {
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+}
+
+#video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-images {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-image {
+    width: 30px;
+    height: 30px;
+    margin: 0 10px;
+}
+
+#footer-text {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-size: 12px;
+    color: #000;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+#menu-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 4;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#menu-button div {
+    width: 20px;
+    height: 2px;
+    background-color: white;
+    position: relative;
+    transition: all 0.3s;
+}
+
+#menu-button div::before,
+#menu-button div::after {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background-color: white;
+    position: absolute;
+    transition: all 0.3s;
+}
+
+#menu-button div::before {
+    top: -6px;
+}
+
+#menu-button div::after {
+    bottom: -6px;
+}
+
+#menu-button.active div {
+    background-color: transparent;
+}
+
+#menu-button.active div::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+#menu-button.active div::after {
+    bottom: 0;
+    transform: rotate(-45deg);
+}
+
+#menu-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 3;
+}
+
+#menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Chatbot styles */
+#chatbot-popup {
+    position: fixed;
+    bottom: 0;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+    z-index: 5;
+    display: none;
+    flex-direction: column;
+}
+
+#chatbot-header {
+    background: #333;
+    color: white;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#chatbot-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#chatbot-messages {
+    padding: 10px;
+    height: 80%;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+#chatbot-input-area {
+    display: flex;
+    border-top: 1px solid #ccc;
+}
+
+#chatbot-input {
+    width:
