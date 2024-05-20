@@ -107,17 +107,15 @@ window.addEventListener('load', function () {
             document.getElementById('loading-screen').style.display = 'none';
         }, 500); // Match the transition duration
     }, 500);
-
-    // Load the menu button 0.5 seconds after the page loads
-    setTimeout(function () {
-        const menuButton = document.getElementById('menu-button');
-        const menuOverlay = document.getElementById('menu-overlay');
-
-        menuButton.style.opacity = '1'; // Make the menu button visible
-
-        menuButton.addEventListener('click', function () {
-            menuButton.classList.toggle('active');
-            menuOverlay.classList.toggle('active');
-        });
-    }, 500);
 });
+
+// Menu button functionality
+const menuButton = document.getElementById('menu-button');
+const menuOverlay = document.getElementById('menu-overlay');
+
+menuButton.addEventListener('click', function () {
+    menuButton.classList.toggle('active');
+    menuOverlay.classList.toggle('active');
+});
+
+Load the menu button 0.5 seconds after the page loads 
