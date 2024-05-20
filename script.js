@@ -117,3 +117,56 @@ menuButton.addEventListener('click', function () {
     menuButton.classList.toggle('active');
     menuOverlay.classList.toggle('active');
 });
+
+// Chatbot functionality
+const apiKey = '6780567068:AAFaU-4bqcW5DgjWVwQZDw06IvR_FaeSbYg'; // Replace with your actual ChatGPT API key
+
+const chatbotMessages = document.getElementById('chatbot-messages');
+const chatbotInput = document.getElementById('chatbot-input');
+const chatbotSend = document.getElementById('chatbot-send');
+
+chatbotSend.addEventListener('click', sendMessage);
+chatbotInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+function sendMessage() {
+    const message = chatbotInput.value.trim();
+    if (!message) return;
+
+    appendMessage('User', message);
+    chatbotInput.value = '';
+
+    fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            prompt: `You are a customer service chatbot for Vape.₿ox. Answer any questions related to the website www.Vape.box which is due to launch soon with web3 capabilities. The team is open to any beneficial partnerships. You can also answer any vape-related questions.\nUser: ${message}\nBot:`,
+            max_tokens: 150,
+            temperature: 0.5,
+            stop: ["\n", "User:", "Bot:"]
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const botMessage = data.choices[0].text.trim();
+        appendMessage('Bot', botMessage);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        appendMessage('Bot', 'Sorry, there was an error. Please try again.');
+    });
+}
+
+function appendMessage(sender, message) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+    chatbotMessages.appendChild(messageElement);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
