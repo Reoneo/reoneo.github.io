@@ -112,12 +112,18 @@ window.addEventListener('load', function () {
     setTimeout(function () {
         const menuButton = document.getElementById('menu-button');
         const menuOverlay = document.getElementById('menu-overlay');
+        const closeButton = document.getElementById('close-button');
 
         menuButton.style.opacity = '1'; // Make the menu button visible
 
         menuButton.addEventListener('click', function () {
             menuButton.classList.toggle('active');
             menuOverlay.classList.toggle('active');
+        });
+
+        closeButton.addEventListener('click', function () {
+            menuOverlay.classList.remove('active');
+            menuButton.classList.remove('active');
         });
     }, 500);
 });
