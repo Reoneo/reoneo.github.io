@@ -18,12 +18,15 @@
     <meta name="twitter:description" content="Check out Vape.₿ox">
     <meta name="twitter:image" content="https://i.imgur.com/KgcJ9dG.jpeg">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
     <div id="loading-screen"></div>
 
     <video id="video-background" autoplay muted loop playsinline>
-        <source src="https://i.imgur.com/Zi5nEt7.mp4" type="video/mp4">
+        <source src="https://i.imgur.com/K5Oh5b3.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
@@ -59,9 +62,17 @@
     </div>
     <div id="footer-text">© 2024 Vape.₿ox. All rights reserved.</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Age Verification Popup -->
+    <div id="age-popup" class="popup">
+        <div class="popup-content">
+            <h2>Are You Over 18?</h2>
+            <div class="popup-buttons">
+                <button id="yes-button" class="popup-button">Yes</button>
+                <button id="no-button" class="popup-button">No</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
