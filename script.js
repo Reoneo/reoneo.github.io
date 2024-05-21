@@ -1,37 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if the age popup has been shown before
+    // Age verification logic
     if (!localStorage.getItem('ageVerified')) {
-        // Show the age popup
         document.getElementById('age-popup').style.display = 'flex';
-
-        // Handle the Yes button click
         document.getElementById('yes-button').addEventListener('click', function() {
             localStorage.setItem('ageVerified', 'true');
             document.getElementById('age-popup').style.display = 'none';
         });
-
-        // Handle the No button click
         document.getElementById('no-button').addEventListener('click', function() {
             window.location.href = 'https://www.google.com';
         });
     }
 
-    // Open and close the NFT collection popup
+    // Open and close the NFT popup
     document.getElementById('openPopup').addEventListener('click', function() {
         document.getElementById('popup').style.display = 'flex';
         fetchNFTs();
     });
-
     document.getElementById('closePopup').addEventListener('click', function() {
         document.getElementById('popup').style.display = 'none';
     });
-
     window.addEventListener('click', function(event) {
         if (event.target == document.getElementById('popup')) {
             document.getElementById('popup').style.display = 'none';
         }
     });
 
+    // Fetch and display NFTs
     function fetchNFTs() {
         const walletDomain = 'vape.box';
         const apiURL = `https://api.opensea.io/api/v1/assets?owner=${walletDomain}&order_direction=desc&offset=0&limit=20`;
@@ -51,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nftDiv.innerHTML = `
                 <img src="${asset.image_url}" alt="${asset.name}" class="nft-image" />
                 <p class="nft-name">${asset.name}</p>
-                <p class="nft-description">${asset.description}</p>
+                <a href="${asset.permalink}" target="_blank" class="nft-offer-button">Make Offer</a>
             `;
             collectionDiv.appendChild(nftDiv);
         });
@@ -60,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Existing Three.js script
 const container = document.getElementById('container');
-
 const scene = new THREE.Scene();
 scene.background = null; // Ensure the background is transparent
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -90,16 +83,13 @@ loader.load(
         const size = box.getSize(new THREE.Vector3()).length();
         const center = box.getCenter(new THREE.Vector3());
 
-        model.position.x += (model.position.x - center.x);
-        model.position.y += (model.position.y - center.y);
-        model.position.z += (model.position.z - center.z);
+        model.position.sub(center);
 
         camera.near = size / 100;
         camera.far = size * 100;
         camera.position.set(size, size, size);
         camera.lookAt(center);
 
-        // Colors for interpolation
         const colors = [
             new THREE.Color(0xff0000), // Red
             new THREE.Color(0x00ff00), // Green
@@ -117,7 +107,6 @@ loader.load(
         const animate = function () {
             requestAnimationFrame(animate);
 
-            // Update the color factor
             colorFactor += 0.002; // Slow down the color change
             if (colorFactor >= 1) {
                 colorFactor = 0;
@@ -127,14 +116,12 @@ loader.load(
                 nextColorIndex2 = (nextColorIndex2 + 1) % colors.length;
             }
 
-            // Interpolate and apply the colors
             const currentColor1 = colors[colorIndex1].clone().lerp(colors[nextColorIndex1], colorFactor);
             const currentColor2 = colors[colorIndex2].clone().lerp(colors[nextColorIndex2], colorFactor);
 
             model.traverse(function (child) {
                 if (child.isMesh) {
                     child.material.color.set(currentColor1);
-                    // Apply second color to some parts if the model has multiple materials
                     if (Array.isArray(child.material)) {
                         child.material.forEach((material, index) => {
                             material.color.set(index % 2 === 0 ? currentColor1 : currentColor2);
@@ -160,7 +147,6 @@ window.addEventListener('resize', function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Fade out the loading screen after 0.5 seconds
 window.addEventListener('load', function () {
     setTimeout(function () {
         document.getElementById('loading-screen').style.opacity = '0';
@@ -169,13 +155,11 @@ window.addEventListener('load', function () {
         }, 500); // Match the transition duration
     }, 500);
 
-    // Delay the appearance of the menu button by 0.5 seconds
     setTimeout(function () {
         document.getElementById('menu-button').style.opacity = '1';
     }, 500);
 });
 
-// Menu button functionality
 const menuButton = document.getElementById('menu-button');
 const menuOverlay = document.getElementById('menu-overlay');
 
