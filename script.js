@@ -15,6 +15,47 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'https://www.google.com';
         });
     }
+
+    // Open and close the NFT collection popup
+    document.getElementById('openPopup').addEventListener('click', function() {
+        document.getElementById('popup').style.display = 'flex';
+        fetchNFTs();
+    });
+
+    document.getElementById('closePopup').addEventListener('click', function() {
+        document.getElementById('popup').style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('popup')) {
+            document.getElementById('popup').style.display = 'none';
+        }
+    });
+
+    function fetchNFTs() {
+        const walletDomain = 'vape.box';
+        const apiURL = `https://api.opensea.io/api/v1/assets?owner=${walletDomain}&order_direction=desc&offset=0&limit=20`;
+
+        fetch(apiURL)
+            .then(response => response.json())
+            .then(data => displayNFTs(data.assets))
+            .catch(error => console.error('Error fetching NFTs:', error));
+    }
+
+    function displayNFTs(assets) {
+        const collectionDiv = document.getElementById('nft-collection');
+        collectionDiv.innerHTML = ''; // Clear previous NFTs
+        assets.forEach(asset => {
+            const nftDiv = document.createElement('div');
+            nftDiv.classList.add('nft-item');
+            nftDiv.innerHTML = `
+                <img src="${asset.image_url}" alt="${asset.name}" class="nft-image" />
+                <p class="nft-name">${asset.name}</p>
+                <p class="nft-description">${asset.description}</p>
+            `;
+            collectionDiv.appendChild(nftDiv);
+        });
+    }
 });
 
 // Existing Three.js script
