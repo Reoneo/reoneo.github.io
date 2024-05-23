@@ -188,3 +188,52 @@ body, html {
     cursor: pointer;
     font-size: 16px;
 }
+
+/* Add the following to your existing CSS */
+
+.popup {
+    perspective: 1000px;
+}
+
+.popup-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.popup-front, .popup-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.popup-back {
+    transform: rotateY(180deg);
+}
+
+.popup.flipped .popup-content {
+    transform: rotateY(180deg);
+}
+
+.popup-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.info-button {
+    right: 50px; /* Adjust this if necessary */
+}
+
+.back-button {
+    right: 10px;
+}
