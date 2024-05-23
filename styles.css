@@ -1,127 +1,190 @@
 body, html {
     margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-/* Loading screen styles */
-#loading-screen {
-    position: fixed;
-    width: 100%;
+    overflow: hidden;
     height: 100%;
-    background: #fff;
-    z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #fff;
 }
 
-/* Video background */
 #video-background {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-    z-index: -1;
-}
-
-/* Container for 3D model */
-#container {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 400px;
-    background-color: #222;
-    margin-top: 50px;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
 }
 
-/* Header styles */
-h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin: 20px 0;
-}
-
-/* Navigation menu */
-nav ul {
+#container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
     display: flex;
+    align-items: center;
     justify-content: center;
-    list-style: none;
-    padding: 0;
-    background-color: #333;
+    z-index: 1;
 }
 
-nav ul li {
-    margin: 0 15px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 20px;
-    display: block;
-}
-
-nav ul li a:hover {
-    background-color: #555;
-}
-
-/* Footer styles */
 .footer-images {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    margin: 20px 0;
 }
 
 .footer-image {
-    width: 100px;
-    height: 100px;
-    margin: 10px;
+    width: 30px;
+    height: 30px;
+    margin: 0 10px;
 }
 
 #footer-text {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-size: 12px;
+    color: #000;
     text-align: center;
-    margin: 20px 0;
-    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
-/* Age verification popup */
-.popup {
-    display: none;
+#loading-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background: #fff;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+#menu-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 4;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+#menu-button div {
+    width: 20px;
+    height: 2px;
+    background-color: white;
+    position: relative;
+    transition: all 0.3s;
+}
+
+#menu-button div::before,
+#menu-button div::after {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background-color: white;
+    position: absolute;
+    transition: all 0.3s;
+}
+
+#menu-button div::before {
+    top: -6px;
+}
+
+#menu-button div::after {
+    bottom: -6px;
+}
+
+#menu-button.active div {
+    background-color: transparent;
+}
+
+#menu-button.active div::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+#menu-button.active div::after {
+    bottom: 0;
+    transform: rotate(-45deg);
+}
+
+#menu-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
     background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+#menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Additional styles for the age verification pop-up */
+.popup {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
     justify-content: center;
     align-items: center;
 }
 
 .popup-content {
-    background-color: #fff;
+    background-color: white;
     padding: 20px;
+    border-radius: 10px;
     text-align: center;
-    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .popup-button {
     padding: 10px 20px;
-    margin: 10px;
-    background-color: #333;
-    color: #fff;
     border: none;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: 16px;
 }
-
-.popup-button:hover {
-    background-color: #555;
-}
-
-/* Add any other critical styles needed for the initial view */
-
-/* Non-critical styles */
-<link rel="stylesheet" href="styles.css" onload="this.onload=null;this.rel='stylesheet'" as="style">
-<noscript><link rel="stylesheet" href="styles.css"></noscript>
