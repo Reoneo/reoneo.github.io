@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-API-KEY': apiKey
                 }
             });
+            console.log('Response status:', response.status);
             if (!response.ok) {
                 throw new Error(`Error fetching NFTs: ${response.statusText}`);
             }
