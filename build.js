@@ -1,5 +1,17 @@
 const fs = require('fs');
+const path = require('path');
 
+// Function to copy files with error handling
+function copyFileSync(src, dest) {
+    try {
+        fs.copyFileSync(src, dest);
+        console.log(`Copied ${src} to ${dest}`);
+    } catch (err) {
+        console.error(`Error copying ${src} to ${dest}:`, err);
+    }
+}
+
+// Replace placeholder in script.js
 fs.readFile('script.js', 'utf8', (err, data) => {
     if (err) {
         return console.log(err);
@@ -12,7 +24,8 @@ fs.readFile('script.js', 'utf8', (err, data) => {
     });
 });
 
-fs.copyFileSync('index.html', 'public/index.html');
-fs.copyFileSync('styles.css', 'public/styles.css');
-fs.copyFileSync('scene.gltf', 'public/scene.gltf');
-fs.copyFileSync('scene.bin', 'public/scene.bin');
+// Copy other necessary files
+const filesToCopy = ['index.html', 'styles.css', 'scene.gltf', 'scene.bin'];
+filesToCopy.forEach(file => {
+    copyFileSync(file, path.join('public', file));
+});
