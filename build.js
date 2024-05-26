@@ -11,6 +11,9 @@ function copyFileSync(src, dest) {
     }
 }
 
+// Check environment variable
+console.log('Environment Variable OPENSEA_API_KEY:', process.env.OPENSEA_API_KEY);
+
 // Replace placeholder in script.js
 fs.readFile('script.js', 'utf8', (err, data) => {
     if (err) {
