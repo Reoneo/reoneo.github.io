@@ -1,0 +1,6 @@
+[build]
+  publish = "public"
+  command = "node build.js"
+
+[context.production.environment]
+  OPENSEA_API_KEY = "c6ea8b600f944986abf33de1624751cf"
