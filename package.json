@@ -1,0 +1,12 @@
+{
+  "name": "vape-box",
+  "version": "1.0.0",
+  "description": "Vape Box Website",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
