@@ -21,6 +21,7 @@ fs.readFile('script.js', 'utf8', (err, data) => {
     fs.mkdirSync('public', { recursive: true });
     fs.writeFile('public/script.js', result, 'utf8', (err) => {
         if (err) return console.log(err);
+        console.log('Successfully wrote public/script.js with API key');
     });
 });
 
