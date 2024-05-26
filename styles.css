@@ -70,7 +70,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: opacity 0.1s ease;
+    transition: opacity 0.3s ease;
 }
 
 #menu-button {
@@ -187,4 +187,22 @@ body, html {
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
+}
+
+/* Styles for the NFT collection */
+#nft-collection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px; /* Adjust as needed */
+}
+
+.nft-item {
+    margin: 10px;
+    text-align: center;
+}
+
+.nft-item img {
+    max-width: 100px; /* Adjust as needed */
+    border-radius: 10px;
 }
