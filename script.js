@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Document loaded');
+
     // Check if the age popup has been shown before
     if (!localStorage.getItem('ageVerified')) {
         // Show the age popup
@@ -18,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fetch NFTs from OpenSea and display them
     const apiKey = '__OPENSEA_API_KEY__'; // Placeholder for the API key
+    console.log('API Key:', apiKey);
     const walletAddress = '0x5471274a6489E7140Ab1D2925B811bd618A08D52';
     const nftContainer = document.getElementById('nft-collection');
 
