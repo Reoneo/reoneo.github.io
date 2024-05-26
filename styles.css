@@ -189,20 +189,33 @@ body, html {
     font-size: 16px;
 }
 
-/* Styles for the NFT collection */
+/* NFT Collection Styles */
 #nft-collection {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-bottom: 20px; /* Adjust as needed */
+    align-items: center;
+    margin-top: 20px;
+    z-index: 2;
 }
 
 .nft-item {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
     margin: 10px;
+    width: 150px;
     text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .nft-item img {
-    max-width: 100px; /* Adjust as needed */
-    border-radius: 10px;
+    width: 100%;
+    height: auto;
+}
+
+.nft-item p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #333;
 }
